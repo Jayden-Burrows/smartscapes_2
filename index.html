@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartScapes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+        
+        body {
+            margin: 0;
+        }
+
+        img {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #consent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color:#2b2d46;
+            background-color: #9593a7;
+            border: 3px solid #2b2d46;
+            padding: 5px;
+            text-align: center;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #2b2d46d0;
+        }
+
+        #title {
+            font-family: "Pixelify Sans", sans-serif;
+            font-size: 2.5em;
+            color: white;
+            position: absolute;
+            top: calc(27%);
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #controls {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25vw;
+        }
+
+        #controls > * {
+            width: 100%;
+        }
+
+        #controls button {
+            padding: 0.25em;
+            font-family: "Pixelify Sans", sans-serif;
+            font-weight: 400;
+        }
+
+        .trapezoid {
+            border-bottom: 1em solid #9593a7;
+            border-left: 1em solid transparent;
+            border-right: 1em solid transparent;
+            height: 0;
+        }
+
+        .upside-down {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <img src="{{ url_for('static', filename='images/index.png') }}" alt="Outside of MLC" usemap="#image-map">
+
+    <div id="overlay"></div>
+
+    <div id="consent">
+        <h1> Research Consent </h1>
+        <p> This should be a description of our project, the data we will collect, and how we will use said data.</p>
+        <button class="pointer" onclick="acceptConsent()">Accept</button>
+    </div>
+
+    <h1 id="title">SMARTSCAPES</h1>
+
+    <div id="controls">
+        <div class="trapezoid"></div>
+        <button class="pointer" onclick="goTo1b()"> PLAY </button>
+        <button class="pointer" onclick="about()"> ABOUT </button>
+        <button class="pointer" onclick="showTips()"> HOW TO PLAY</button>
+        <div class="trapezoid upside-down"></div>
+    </div>
+
+    <div id="textbox"></div>
+
+    <script src="{{ url_for('static', filename='imageMapResizer.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='script.js') }}"> </script>
+    <script>
+        imageMapResize();
+
+        const consent = document.getElementById("consent");
+        const controls = document.getElementById("controls");
+
+        localStorage.setItem("checkedBulletin", false);
+        localStorage.setItem("premiseOver", false);
+
+        function acceptConsent() {
+            consent.style.display = "none";
+            showControls();
+        }
+
+        function showControls() {
+            controls.style.display = "flex";
+            controls.style.flexDirection = "column";
+            controls.style.alignItems = "center";
+            controls.style.gap = "3vh";
+        }
+
+        function goTo1b() {
+            window.location.href = "{{ url_for('one_back')}}";
+        }
+
+        function about() {
+            let newSentences = ["This should be a project description!"];
+            addDialogue(newSentences);
+        }
+
+        function showTips() {
+            let newSentences = ["Hover your mouse around the screen and look for clickable elements.",
+                "Make sure to read the textboxes!"
+            ];
+            addDialogue(newSentences);
+        }
+
+        closeTextbox();
+
+        function setup() {
+            proxy = proxyText;
+            proxy.dialogueIndex = -1;
+            proxy.textIndex = 0;
+            dialogue = [];
+        }
+
+        window.onload = setup;
+    </script>
+</body>
+
+</html>
