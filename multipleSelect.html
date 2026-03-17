@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartScapes</title>
+    <style>
+        /* Modal for puzzles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2a 0%, #0d0d15 100%);
+            border: 3px solid #00ff88;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff88;
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .modal-question {
+            color: #fff;
+            font-size: 17px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #2a2a3a 0%, #1a1a2a 100%);
+            border: 2px solid #444;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            border-color: #00ff88;
+        }
+
+        .selected {
+            background: linear-gradient(135deg, #003a2a 0%, #002a1a 100%);
+            border-color: #00ff88;
+            color: #00ff88;
+            transform: translateX(5px);
+        }
+
+        .hint-btn {
+            background: #4a4a00;
+            color: #ffeb3b;
+            border: 2px solid #666;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            background: #6a6a00;
+            border-color: #ffeb3b;
+        }
+
+        .hint {
+            background: rgba(80, 80, 0, 0.3);
+            padding: 12px;
+            margin-top: 12px;
+            border-left: 3px solid #ffeb3b;
+            color: #ffeb3b;
+            font-size: 14px;
+            /* display: none; */
+        }
+
+        .submit {
+            background: rgba(0, 80, 45, 0.3);
+            padding: 12px;
+            margin: 12px 0 0 24px;
+            border-left: 3px solid #3bff83;
+            color: #3bff83;
+            font-size: 14px;
+            /* display: none; */
+        }
+
+        .feedback {
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .correct {
+            background: rgba(0, 100, 0, 0.3);
+            color: #00ff88;
+            border-color: #00ff88;
+        }
+
+        .incorrect {
+            background: rgba(100, 0, 0, 0.3);
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #00aa66 0%, #005533 100%);
+            color: white;
+            border: 2px solid #00ff88;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            /* display: none; */
+        }
+
+        .next-btn:hover {
+            background: linear-gradient(135deg, #00cc77 0%, #006644 100%);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .close-modal {
+            background: #333;
+            color: #fff;
+            border: 2px solid #666;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            width: 100%;
+            font-family: 'Share Tech Mono', monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Multiple-Select -->
+    <div class="modal" id="multipleSelectModal">
+        <div class="modal-content">
+            <!-- <div class="modal-title" id="modalTitle">{{ room.puzzle_type|upper }} ACCESS</div> -->
+            <div class="modal-title"> ROOM/ACCESS </div>
+            <div class="modal-question"> Question: Select All That Apply </div>
+
+            <div class="options multi-select" id="options">
+                <div id="ms-option0" class="option" onclick="selectAnswer(0)"> Option 1 </div>
+                <div id="ms-option1" class="option" onclick="selectAnswer(1)"> Option 2 </div>
+                <div id="ms-option2" class="option" onclick="selectAnswer(2)"> Option 3 </div>
+                <div id="ms-option3" class="option" onclick="selectAnswer(3)"> Option 4 </div>
+                <button class="hint-btn" onclick="showHint()">💡 Need a hint?</button>
+            </div>
+
+            
+            <button class="submit" onclick="submit()">Submit
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+
+        let startTime = Date.now();
+        let answered = false;
+        let currentPuzzleObject = null;
+        const selectedAnswers = new Set();
+
+        const MSoption0 = document.getElementById("ms-option0");
+        const MSoption1 = document.getElementById("ms-option1");
+        const MSoption2 = document.getElementById("ms-option2");
+        const MSoption3 = document.getElementById("ms-option3");
+
+        const MSoptions = [MSoption0, MSoption1, MSoption2, MSoption3];
+
+        function selectAnswer(index) {
+            if (MSoptions[index].classList.contains("selected")) {
+                MSoptions[index].classList.remove("selected");
+                selectedAnswers.delete(index);
+            } else {
+                selectedAnswers.add(index);
+                MSoptions[index].classList.add("selected");
+            }
+        }
+
+        function showHint() {
+
+        }
+
+        function submit() {
+            let timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+            // Nupoor Code
+        }
+
+        function closeModal() {
+            document.getElementById('multipleSelectModal').style.display = 'none';
+            answered = false;
+       }
+        
+
+        // function submit() {
+        //         if (answered) return;
+        //         answered = true;
+
+        //         let timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+        //         fetch('/submit', {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify({
+        //                 room_id: {{ room.id }},
+        //             answer: selectedAnswers,
+        //             time_spent: timeSpent
+        //            })
+        //        })
+        //        .then(r => r.json())
+        //         .then(data => {
+        //             let feedback = document.getElementById('feedback');
+        //             feedback.style.display = 'block';
+
+        //             if (data.correct) {
+        //                 feedback.className = 'feedback correct';
+        //                 feedback.innerHTML = data.success_message;
+        //                 updateStory(storySequence[storySequence.length - 1]);
+        //             } else {
+        //                 feedback.className = 'feedback incorrect';
+        //                 feedback.innerHTML = '✗ Incorrect. Correct answer: ' + data.correct_answer;
+        //             }
+
+        //             document.getElementById('nextBtn').style.display = 'block';
+        //             document.getElementById('closeBtn').style.display = 'none';
+
+        //             // Disable options
+        //             document.querySelectorAll('.option').forEach(opt => {
+        //                 opt.style.cursor = 'not-allowed';
+        //                 opt.style.opacity = '0.4';
+        //                 opt.onclick = null;
+        //             });
+        //         });
+        //    }
+
+        //     function nextRoom() {
+        //         window.location.href = '/room';
+        //     }
+    </script>
+</body>
+
+</html>
