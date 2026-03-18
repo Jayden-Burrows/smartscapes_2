@@ -112,9 +112,9 @@
     </div>
 
     <div id="buttonControls"> 
-        <button id="closeButton" onclick="closeBtn()">X</button>
-        <button id="upDownBtn" onclick="upBtn()">⬆</button>
-        <button id="upDownBtn" onclick="downBtn()">⬇</button>
+        <button class="pointer" id="closeButton" onclick="closeBtn()">X</button>
+        <button class="pointer" id="upDownBtn" onclick="upBtn()">⬆</button>
+        <button class="pointer" id="upDownBtn" onclick="downBtn()">⬇</button>
     </div>
 
     <div id="bulletin">
@@ -182,6 +182,7 @@
                 && target.dialogueIndex == dialogue.length
                 && posterTouched) {
                 modal.style.visibility = "visible";
+                posterTouched = false;
             }
             return target[property] = value;
         }

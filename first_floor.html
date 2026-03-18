@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartScapes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <img src="images/first_floor_main_exit.JPG" usemap="#first-floor-map">
+
+    <map name="first-floor-map">
+        <area target="_self" id="door1" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="2224,1487,3170,2651"
+            shape="rect">
+        <area target="_self" id="door2" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="581,2814,4,1564"
+            shape="rect">
+        <area target="_self" id="door3" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="4291,1444,4661,2542"
+            shape="rect">
+    </map>
+    <div id="textbox"></div>
+    <div id="modal">
+        <p id="question"> Sample Question: What color is the sky? </p>
+        <input id="input" type="text">
+        <button id="answerBtn" onClick="addCorrectDialogue()"> Submit </button>
+    </div>
+</body>
+<script src="imageMapResizer.min.js"> </script>
+<script src="script.js"></script>
+<script>
+    imageMapResize();
+
+    const door1 = document.getElementById("door1");
+    const door2 = document.getElementById("door2");
+    const door3 = document.getElementById("door3");
+    
+
+    dialogue = ["There would be some riddle here or something."];
+
+    function setup() {
+        handler = dialogueHandler;
+        proxy = new Proxy(textProps, handler);
+        proxy.dialogueIndex = -1;
+        proxy.textIndex = 0;
+        handleTextbox();
+    }
+
+    function addTvDialogue() {
+        let newDialogue = ["Nothing here"];
+        addDialogue(newDialogue);
+    }
+
+    function showPuzzle() {
+        modal.style.visibility = "visible";
+        door1.onclick="javascript:void(0)";
+        door2.onclick="javascript:void(0)";
+        door3.onclick="javascript:void(0)";
+    }
+
+    function addCorrectDialogue() {
+        modal.style.visibility = "hidden";
+        let newDialogue = ["Click the main exit doors. any of them"];
+        addDialogue(newDialogue);
+        door1.href="final.html"
+        door1.href="final.html"
+        door1.href="final.html"
+    }
+
+    function addElevatorDialogue() {
+        let newDialogue = ["Nothing now"]
+        addDialogue(newDialogue);
+    }
+
+    window.onload = setup;
+</script>
+
+</html>
