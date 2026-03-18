@@ -10,12 +10,56 @@
 <img src="tv_room.JPG" usemap="#image-map">
 
 <map name="image-map">
-    <area target="" alt="" title="" href="" coords="1040,934,1934,1582" shape="rect">
-    <area target="" alt="" title="" href="" coords="4018,2583,-3,3021" shape="rect">
-    <area target="" alt="" title="" href="" coords="231,2687,0,1080" shape="rect">
+    <area target="_self" alt="" title="TV" href="" coords="1040,934,1934,1582" shape="rect">
+    <area target="_self" alt="" title="Study room + dialogue" href="" coords="4018,2583,-3,3021" shape="rect">
+    <area target="_self" alt="" title="Exit study room" href="" coords="231,2687,0,1080" shape="rect">
 </map>
       
-    <script src="script.js"> </script>
-</script>
+<div id="textbox"></div>
 </body>
+<script src="imageMapResizer.min.js"> </script>  
+<script src="script.js"> </script>
+<script>
+    imageMapResize();
+
+    const doorArea = document.querySelector(".door-link");
+        if (doorArea) {
+            doorArea.style.opacity = "0.5";
+            doorArea.style.pointerEvents = "none";
+            doorArea.style.cursor = "not-allowed";
+        }
+
+        function showTVMessage() {
+            let newSentences = [
+                "What is happening? It feels like the security system has gone into lockdown.",
+                "The system is challenging me. I need to prove my intelligence by solving its puzzles.",
+                "Each room in this building holds a task. Solve them, and I regain freedom in time for the exam.",
+                "I need to think carefully.",
+                "Let's move forward and see what I am up against."
+            ];
+            addDialogue(newSentences);
+            
+             
+        }
+
+        closeTextbox();
+
+        function setup() {
+            textProps.dialogueIndex = -1;
+            textProps.textIndex = 0;
+            dialogue = [];
+            proxy = proxyText;
+            
+            // Check if returning from TV screen
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('fromTV') === 'true') {
+                showTVMessage();
+                
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        window.onload = setup;
+</script>
+
 </html>

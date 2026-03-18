@@ -14,8 +14,24 @@
     <area target="" alt="" title="" href="" coords="0,2478,4015,2998" shape="rect">
     <area target="" alt="" title="" href="" coords="15,23,478,2483" shape="rect">
 </map>
-      
-    <script src="script.js"> </script>
-</script>
+
+<div id="textbox"></div>
 </body>
+<script src="imageMapResizer.min.js"> </script>  
+<script src="script.js"> </script>
+<script>
+    imageMapResize();
+
+    dialogue = ["Placeholder for a riddle. The answer would be to click the cash register"
+    ];
+
+    function setup() {
+        handler = dialogueHandler;
+        proxy = new Proxy(textProps, handler);
+        proxy.dialogueIndex = -1;
+        proxy.textIndex = 0;
+        handleTextbox();
+    }
+</script>
+
 </html>
