@@ -6,20 +6,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        #bulletin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            border: 5px ridge slategray;
+            width: 65vw;
+            height: 50vw;
+            padding: 5px;
+            visibility: hidden;
+            overflow: hidden;
+        }
+
+        .poster {
+            background-color: white;
+            margin: 3px;
+            height: min(calc((50vw - 10px) / 2.5));
+            width: 25%;
+            float: left;
+            font-size: small;
+            overflow: hidden;
+            border: 1px solid grey;
+        }
+
+        #puzzlePoster {
+            cursor: url('images/pointerClick.png'), pointer;
+        }
+
+        #puzzlePoster:hover {
+            background-color: palegoldenrod;
+            transform: translateY(-25%);
+            transition: transform ease-in 0.3s;
+        }
+
+        #bulletin p {
+            color: black;
+            font-family: "sans-serif";
+            text-align: center;
+            margin: 5px;
+        }
+
+        #buttonControls {
+            background-color: darkslategray;
+            border: 5px ridge lightgrey;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            width: 20vw;
+            height: 40vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            visibility: hidden;
+        }
+
+        #closeButton {
+            width: 30px;
+            height: 30px;
+            padding: 3px;
+            border-radius: 8px;
+            align-self: end;
+            font-size: larger;
+            text-align: center;
+            background-color: lightgrey;
+            color: red;
+            font-weight: bold;
+        }
+
+        #upDownBtn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            font-size: 70px;
+            text-align: center;
+            background-color: lightgrey;
+        }
+
+    </style>
 </head>
 
 <body>
-    <img src="elevator.JPG" usemap="#elevator-map">
+    <img src="images/elevator.JPG" usemap="#elevator-map">
 
     <map name="elevator-map">
-        <area target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door" title="Elevator Door" href="javascript:void(0)"
-            coords="1287,937,2130,2612" shape="rect">
-        <area target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door" title="Elevator Door" href="javascript:void(0)"
-            coords="3122,987,3814,2570" shape="rect">
-        <area target="_self" class="pointer" onclick="showBulletin()" alt="Bulletin" title="Bulletin" href="javascript:void(0)" coords="4690,880,5632,2022"
-            shape="rect">
-        <area target="_self" class="pointer" onclick="showButtons()" alt="Elevator Buttons" title="Elevator Buttons" href="javascript:void(0)"
-            coords="2563,1805,2680,2030" shape="rect">
+        <area target="_self" id="elevator1" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door"
+            title="Elevator Door" href="javascript:void(0)" coords="1287,937,2130,2612" shape="rect">
+        <area target="_self" id="elevator2" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door"
+            title="Elevator Door" href="javascript:void(0)" coords="3122,987,3814,2570" shape="rect">
+        <area target="_self" class="pointer" onclick="showBulletin()" alt="Bulletin" title="Bulletin"
+            href="javascript:void(0)" coords="4690,880,5632,2022" shape="rect">
+        <area target="_self" class="pointer" onclick="showButtons()" alt="Elevator Buttons" title="Elevator Buttons"
+            href="javascript:void(0)" coords="2563,1805,2680,2030" shape="rect">
     </map>
     <div id="textbox"></div>
     <div id="modal">
@@ -27,20 +110,84 @@
         <input id="input" type="text">
         <button id="answerBtn" onClick="addCorrectDialogue()"> Submit </button>
     </div>
+
+    <div id="buttonControls"> 
+        <button id="closeButton" onclick="closeBtn()">X</button>
+        <button id="upDownBtn" onclick="upBtn()">⬆</button>
+        <button id="upDownBtn" onclick="downBtn()">⬇</button>
+    </div>
+
+    <div id="bulletin">
+        <div style="position: relative; left: 2px; top: 4px;" class="poster">
+            <p>Rivalry Cookout</p>
+            <p>Bring your least favorite mascot! </p>
+        </div>
+        <div style="position: relative; left: 6px;" class="poster">
+            <p>Conjuring Circle </p>
+            <p> Driftmier Woods at 8pm</p>
+            <p>Be there or be square</p>
+        </div>
+        <div style="position: relative; left: 60px; bottom: 2px;" class="poster">
+            <p>Need tutoring help? Call Dan the Man! </p>
+            <p>123-456-fake</p>
+        </div>
+        <div style="position: relative; left: 25px; top: 2px;" class="poster">
+            <p>Don't Call Dan the Man! </p>
+            <p>He stole all my money!</p>
+        </div>
+        <div id="puzzlePoster" style="position: relative; left: 4px; top: 12px;" class="poster" onclick="showPuzzle()">
+            <p>Test Your Knowledge! </p>
+            <p>Computer Science Quiz: </p>
+        </div>
+        <div style="position: relative; left: 48px; top: 15px;" class="poster">
+            <p>Do you think you have what it takes to be the top dawg?</p>
+            <p style="color: red;">WRESTLE A DOG</p>
+            <p>May 32, 2026</p>
+        </div>
+        <div style="position: relative; left: 12px; top: 15px;" class="poster">
+            <p>Poll: Cheese Cake or Cake Cheese? </p>
+            <p>Write your answers below</p>
+            <p>May 32, 2026</p>
+        </div>
+        <div style="position: relative; left: 55px; top: 0px;" class="poster">
+            <p>Dear Kevin, </p>
+            <p>Stop emailing me. We've never even met </p>
+            <p>Bob.</p>
+        </div>
+    </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
 
-    const elevator = document.getElementById("elevator");
+    const elevator1 = document.getElementById("elevator1");
+    const elevator2 = document.getElementById("elevator2");
+
+    const bulletin = document.getElementById("bulletin");
+
+    const buttons = document.getElementById("buttonControls");
+
+    let buttonValue = "";
+
+    let posterTouched = false;
 
     dialogue = ["The player would come down from the third floor. They would comment on the elevators being disabled and all the exits being locked",
         "Placeholder for a riddle from the third floor. The answer would be to click the cash register"
     ];
 
+    let handler = {
+        set(target, property, value, receiver) {
+            if (property == "textIndex" && value == 0
+                && target.dialogueIndex == dialogue.length
+                && posterTouched) {
+                modal.style.visibility = "visible";
+            }
+            return target[property] = value;
+        }
+    };
+
     function setup() {
-        handler = dialogueHandler;
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -48,26 +195,63 @@
     }
 
     function showBulletin() {
-        // to add 
+        bulletin.style.visibility = "visible";
     }
 
     function showPuzzle() {
-        modal.style.visibility = "visible";
+        posterTouched = true;
+        bulletin.style.visibility = "hidden";
+        let newDialogue = ["'Maybe this is what that AI was talking about.",
+            "You scan the QR code to start the quiz."
+        ];
+        addDialogue(newDialogue);
     }
 
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        let newDialogue = ["This would be a riddle that would lead the player to the elevator",
-            "click the elevator doors now"
+        let newDialogue = ["Congrats, you passed the quiz. ",
+            "As a celebrating fun fact, the cheat code for many old games was...",
+            "Up, up, down, down, left, right, left, right",
+            "click the elevator buttons now: up, up, down, down"
         ];
         addDialogue(newDialogue);
-        elevator.href = "elevator.html";
-        elevator.onclick = "javascript:void(0)";
+    }
+
+    function showButtons() {
+        buttons.style.visibility = "visible";
+    }
+
+    function checkButtonValue() {
+        if (buttonValue == "upupdowndown") {
+            buttons.style.visibility = "hidden";
+            elevator1.href = "first_floor.html";
+            elevator2.href = "first_floor.html";
+            elevator1.onclick = "javascript:void(0)";
+            elevator2.onclick = "javascript:void(0)";
+            let newDialogue = ["click the elevators"];
+            addDialogue(newDialogue);
+        }
+        console.log(buttonValue);
     }
 
     function addElevatorDialogue() {
         let newDialogue = ["Nothing"]
         addDialogue(newDialogue);
+    }
+
+    function closeBtn() {
+        buttonValue = "";
+        buttons.style.visibility = "hidden";
+    }
+
+    function upBtn() {
+        buttonValue += "up";
+        checkButtonValue();
+    }
+
+    function downBtn() {
+        buttonValue += "down";
+        checkButtonValue();
     }
 
     window.onload = setup;
