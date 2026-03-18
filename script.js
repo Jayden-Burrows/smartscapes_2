@@ -1,4 +1,5 @@
 const textBox = document.getElementById("textbox");
+const modal = document.getElementById("modal");
 
 const typeSpeed = 15; // milliseconds per character
 
@@ -97,7 +98,7 @@ function addDialogue(arrayOfSentencesToAdd) {
         proxy.dialogue--;
     } else if (textBox.classList.contains('close-text')) {
         openTextbox();
-        handleTextbox(); 
+        handleTextbox();
     } else if (!textBox.classList.contains('close-text') && proxy.dialogueIndex == -1) {
         proxy.dialogueIndex++;
         proxy.textIndex = 0;

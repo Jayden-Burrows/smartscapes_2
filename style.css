@@ -2,68 +2,95 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 img[usemap] {
-  width: 100vw;
-  height: 100vh;
-  display: block;
+    width: 100vw;
+    height: 100vh;
+    display: block;
 }
 
 #textbox {
-  position: absolute;
-  width: 80vw;
-  bottom: 5vh;
-  left: 8vw;
-  background-color: lightsteelblue;
-  padding: 2vw;
-  border: 5px lightslategray outset;
-  border-radius: 5px;
-  font-family: "Pixelify Sans", sans-serif;
-  font-weight: 500;
-  font-size: 2.5vh;
+    position: absolute;
+    width: 80vw;
+    bottom: 5vh;
+    left: 8vw;
+    background-color: lightsteelblue;
+    padding: 2vw;
+    border: 5px lightslategray outset;
+    border-radius: 5px;
+    font-family: "Pixelify Sans", sans-serif;
+    font-weight: 500;
+    font-size: 2.5vh;
 }
 
 .important {
-  font-family: sans-serif;
-  color: #e11800;
-  font-weight: bold;
+    font-family: sans-serif;
+    color: #e11800;
+    font-weight: bold;
 }
 
 .close-text {
-  display: none;
-  animation: close-text 500ms ease-out forwards;
+    display: none;
+    animation: close-text 500ms ease-out forwards;
 }
 
 @keyframes close-text {
-  0% {
-    transform: scaleX(1);
-  }
+    0% {
+        transform: scaleX(1);
+    }
 
-  100% {
-    transform: scaleX(0);
-  }
+    100% {
+        transform: scaleX(0);
+    }
 }
 
 .show-text {
-  display: block;
-  animation: show-text 500ms ease-out forwards;
+    display: block;
+    animation: show-text 500ms ease-out forwards;
 }
 
 @keyframes show-text {
-  0% {
-    transform: scaleX(0);
-  }
+    0% {
+        transform: scaleX(0);
+    }
 
-  100% {
-    transform: scaleX(1);
-  }
+    100% {
+        transform: scaleX(1);
+    }
 }
 
 .pointer {
-  cursor: url('images/pointerClick.png'), pointer;
+    cursor: url('images/pointerClick.png'), pointer;
+}
+
+#modal {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 300px;
+    height: 100px;
+    visibility: hidden;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 10px;
+    border-radius: 18px;
+}
+
+#question {
+    color: white;
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+#input {
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+#answerBtn {
+    background-color: slategray;
+    color: white;
+    font-family: "Pixelify Sans", sans-serif;
 }

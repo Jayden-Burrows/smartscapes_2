@@ -9,16 +9,17 @@
 </head>
 
 <body>
-    <img src="images/jittery_joes_zoom_in_wide.JPG" usemap="#cafe-map">
+    <img src="elevator.JPG" usemap="#elevator-map">
 
-    <map name="cafe-map">
-        <area target="_self" class="pointer" onclick="showPuzzle()" alt="Cash Register" title="Cash Register"
-            href="javascript:void(0)" coords="2555,1900,2800,2071" shape="rect">
-        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
-            coords="2236,1393,2865,1744" shape="rect">
-        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
-            coords="3221,1393,3795,1726" shape="rect">
-        <area id="elevator" target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevators" title="Elevators" href="javascript:void(0)" coords="6,1,978,2783" shape="rect">    
+    <map name="elevator-map">
+        <area target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door" title="Elevator Door" href="javascript:void(0)"
+            coords="1287,937,2130,2612" shape="rect">
+        <area target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door" title="Elevator Door" href="javascript:void(0)"
+            coords="3122,987,3814,2570" shape="rect">
+        <area target="_self" class="pointer" onclick="showBulletin()" alt="Bulletin" title="Bulletin" href="javascript:void(0)" coords="4690,880,5632,2022"
+            shape="rect">
+        <area target="_self" class="pointer" onclick="showButtons()" alt="Elevator Buttons" title="Elevator Buttons" href="javascript:void(0)"
+            coords="2563,1805,2680,2030" shape="rect">
     </map>
     <div id="textbox"></div>
     <div id="modal">
@@ -46,9 +47,8 @@
         handleTextbox();
     }
 
-    function addTvDialogue() {
-        let newDialogue = ["Nothing here"];
-        addDialogue(newDialogue);
+    function showBulletin() {
+        // to add 
     }
 
     function showPuzzle() {
@@ -58,7 +58,7 @@
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
         let newDialogue = ["This would be a riddle that would lead the player to the elevator",
-            "Click the left side of the screen to go the elevators"
+            "click the elevator doors now"
         ];
         addDialogue(newDialogue);
         elevator.href = "elevator.html";
@@ -66,7 +66,7 @@
     }
 
     function addElevatorDialogue() {
-        let newDialogue = ["Nothing now"]
+        let newDialogue = ["Nothing"]
         addDialogue(newDialogue);
     }
 
