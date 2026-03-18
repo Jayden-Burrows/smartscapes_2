@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+img[usemap] {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+#textbox {
+  position: absolute;
+  width: 80vw;
+  bottom: 5vh;
+  left: 8vw;
+  background-color: lightsteelblue;
+  padding: 2vw;
+  border: 5px lightslategray outset;
+  border-radius: 5px;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: 500;
+  font-size: 2.5vh;
+}
+
+.important {
+  font-family: sans-serif;
+  color: #e11800;
+  font-weight: bold;
+}
+
+.close-text {
+  display: none;
+  animation: close-text 500ms ease-out forwards;
+}
+
+@keyframes close-text {
+  0% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+.show-text {
+  display: block;
+  animation: show-text 500ms ease-out forwards;
+}
+
+@keyframes show-text {
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.pointer {
+  cursor: url('images/pointerClick.png'), pointer;
+}

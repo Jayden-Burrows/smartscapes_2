@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartScapes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <img src="images/jittery_joes_zoom_in_wide.JPG" usemap="#cafe-map">
+
+    <map name="cafe-map">
+        <area target="_self" class="pointer" alt="Cash Register" title="Cash Register" href="javascript:void(0)"
+            coords="2555,1900,2800,2071" shape="rect">
+        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)" coords="2236,1393,2865,1744"
+            shape="rect">
+        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)" coords="3221,1393,3795,1726"
+            shape="rect">
+    </map>
+    <div id="textbox"></div>
+</body>
+<script src="imageMapResizer.min.js"> </script>
+<script src="script.js"></script>
+<script>
+    imageMapResize();
+
+    dialogue = ["Placeholder for a riddle. The answer would be to click the cash register"
+    ];
+
+    function setup() {
+        handler = dialogueHandler;
+        proxy = new Proxy(textProps, handler);
+        proxy.dialogueIndex = -1;
+        proxy.textIndex = 0;
+        handleTextbox();
+    }
+
+    function addTvDialogue() {
+        let newDialogue = ["Nothing here"];
+        addDialogue(newDialogue);
+    }
+
+    function showAnswer() {
+        
+    }
+
+    window.onload = setup;
+</script>
+
+</html>
