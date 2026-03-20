@@ -6,10 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        img[usemap] {
+            object-fit: contain;
+            background-color: #222;
+        }
+    </style>
 </head>
 
 <body>
-    <img src="images/jittery_joes_zoom_in_wide.JPG" usemap="#cafe-map">
+    <img src="static/images/jittery_joes_zoom_in_wide.JPG" usemap="#cafe-map">
 
     <map name="cafe-map">
         <area target="_self" class="pointer" onclick="showPuzzle()" alt="Cash Register" title="Cash Register"

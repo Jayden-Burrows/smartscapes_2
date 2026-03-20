@@ -33,7 +33,7 @@
         }
 
         #puzzlePoster {
-            cursor: url('images/pointerClick.png'), pointer;
+            cursor: url('static/images/pointerClick.png'), pointer;
         }
 
         #puzzlePoster:hover {
@@ -88,11 +88,15 @@
             background-color: lightgrey;
         }
 
+        img[usemap] {
+            object-fit: contain;
+            background-color: #222;
+        }
     </style>
 </head>
 
 <body>
-    <img src="images/elevator.JPG" usemap="#elevator-map">
+    <img src="static/images/elevator.JPG" usemap="#elevator-map">
 
     <map name="elevator-map">
         <area target="_self" id="elevator1" class="pointer" onclick="addElevatorDialogue()" alt="Elevator Door"

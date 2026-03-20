@@ -46,7 +46,7 @@
             font-weight: bold;
             border: 3px solid #ffcdd2;
             border-radius: 8px;
-            cursor: url('images/pointerClick.png'), pointer;
+            cursor: url('static/images/pointerClick.png'), pointer;
             transition: background-color 0.2s, transform 0.2s;
         }
 
@@ -69,13 +69,18 @@
             color: #b71c1c;
             font-weight: bold;
             border: none;
-            cursor: url('images/pointerClick.png'), pointer;
+            cursor: url('static/images/pointerClick.png'), pointer;
+        }
+
+        img[usemap] {
+            object-fit: contain;
+            background-color: #222;
         }
     </style>
 </head>
 
 <body>
-    <img src="images/fire_exit.JPG" usemap="#image-map">
+    <img src="static/images/fire_exit.JPG" usemap="#image-map">
 
     <map name="image-map">
         <area target="_self" id="exitDoor" class="pointer" onclick="addDoorDialogue()" alt="Exit Door"

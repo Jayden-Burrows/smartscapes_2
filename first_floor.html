@@ -6,10 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        img[usemap] {
+            object-fit: contain;
+            background-color: #222;
+        }
+    </style>
 </head>
 
 <body>
-    <img src="images/first_floor_main_exit.JPG" usemap="#first-floor-map">
+    <img src="static/images/first_floor_main_exit.JPG" usemap="#first-floor-map">
 
     <map name="first-floor-map">
         <area target="_self" id="door1" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="2224,1487,3170,2651"
