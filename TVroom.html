@@ -76,9 +76,11 @@
         tvWatched = true;
         let newSentences = [
             "What is happening? It feels like the security system has gone into lockdown.",
-            "The system is challenging me. I need to prove my intelligence by solving its puzzles.",
-            "Each room in this building holds a task. Solve them, and I regain freedom in time for the exam.",
-            "I need to think carefully.",
+            "A robotic voice says...",
+            "'The system is challenging you. You need to prove your intelligence by solving its puzzles.'",
+            "'Each room in this building holds a task. Solve them, and you will regain your freedom in time for the exam.'",
+            "You hear the door unlock",
+            "...I need to think carefully.",
             "Let's move forward and see what I am up against."
         ];
         addDialogue(newSentences);
@@ -99,8 +101,12 @@
     }
 
     function addDoorDialogue() {
-        let newDialogue = ["The door is locked. Maybe there's a clue somewhere in this room."];
-        addDialogue(newDialogue);
+        if (!tvWatched) {
+            let newDialogue = ["The door is locked. Maybe there's a clue somewhere in this room."];
+            addDialogue(newDialogue);
+        } else {
+            exitDoor.href = "computers.html";
+        }
     }
 
     window.onload = setup;
