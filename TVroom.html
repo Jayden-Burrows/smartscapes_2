@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <style>
         img[usemap] {
-            object-fit: contain;
-            background-color: #222;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -18,8 +17,9 @@
     <img src="static/images/tv_room.JPG" usemap="#image-map">
 
    <map name="image-map">
-    <area target="_self" class="pointer"  alt="TV" title="TV" href="op.html" coords="1040,934,1934,1582" shape="rect">
-    <area target="_self" id="exitDoor" class="pointer door-link"  alt="Exit Door" title="Exit Door" href="computers.html" coords="231,2687,0,1080" shape="rect">
+    <area target="_self" class="pointer" alt="TV" title="TV" href="op.html" coords="1062,948,1895,1051,1895,1479,1097,1557" shape="poly">
+    <area target="_self" id="exitDoor" class="pointer door-link" alt="Exit Door" title="Exit Door" href="computers.html" coords="0,1050,246,2721,-3,2785" shape="poly">
+    
 
 </map>
 
@@ -37,13 +37,14 @@
 
     let handler = {
         set(target, property, value, receiver) {
+            target[property] = value;
             if (property == "textIndex" && value == 0
                 && target.dialogueIndex == dialogue.length
                 && tvWatched) {
-                exitDoor.setAttribute("href", "computers.html");
+                exitDoor.onclick = null;
                 exitDoor.style.cursor = "pointer";
             }
-            return target[property] = value;
+            return true;
         }
     };
 
@@ -53,7 +54,7 @@
         proxy.textIndex = 0;
 
         
-        exitDoor.removeAttribute("href");
+        exitDoor.onclick = function(e) { e.preventDefault(); };
         exitDoor.style.cursor = "not-allowed";
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -98,7 +99,7 @@
             let newDialogue = ["The door is locked. Maybe there's a clue somewhere in this room."];
             addDialogue(newDialogue);
         } else {
-            exitDoor.href = "computers.html";
+            exitDoor.onclick = null;
             exitDoor.classList.add("pointer");
         }
     }
