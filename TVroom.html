@@ -59,7 +59,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('fromTV') === 'true') {
             showTVMessage();
-            window.history.replaceState({}, document.title, window.location.pathname);
         } else {
             closeTextbox();
         }
@@ -72,9 +71,8 @@
         tvWatched = true;
         let newSentences = [
             "What is happening? It feels like the security system has gone into lockdown.",
-            "A robotic voice says...",
             "'Each room in this building holds a task. Solve them, and you will regain your freedom in time for the exam.'",
-            "You hear the door unlock",
+            "You hear the door unlock.",
             "...I need to think carefully.",
             "Let's move forward and see what I am up against."
         ];
@@ -101,6 +99,7 @@
             addDialogue(newDialogue);
         } else {
             exitDoor.href = "computers.html";
+            exitDoor.classList.add("pointer");
         }
     }
 
