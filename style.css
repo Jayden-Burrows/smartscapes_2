@@ -29,7 +29,6 @@ img[usemap] {
 }
 
 .important {
-    font-family: sans-serif;
     color: #e11800;
     font-weight: bold;
 }
@@ -65,7 +64,7 @@ img[usemap] {
 }
 
 .pointer {
-    cursor: url('images/pointerClick.png'), pointer;
+    cursor: url('static/images/pointerClick.png'), pointer;
 }
 
 #modal {
