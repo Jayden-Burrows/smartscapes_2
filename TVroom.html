@@ -17,24 +17,20 @@
 <body>
     <img src="static/images/tv_room.JPG" usemap="#image-map">
 
-    <map name="image-map">
-        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="TV" title="TV"
-            href="javascript:void(0)" coords="1040,934,1934,1582" shape="rect">
-        <area target="_self" class="pointer" onclick="addRoomDialogue()" alt="Study Room" title="Study Room"
-            href="javascript:void(0)" coords="4018,2583,-3,3021" shape="rect">
-        <area target="_self" id="exitDoor" class="pointer door-link" onclick="addDoorDialogue()" alt="Exit Door"
-            title="Exit Door" href="javascript:void(0)" coords="231,2687,0,1080" shape="rect">
-    </map>
+   <map name="image-map">
+    <area target="_self" class="pointer"  alt="TV" title="TV" href="op.html" coords="1040,934,1934,1582" shape="rect">
+    <area target="_self" id="exitDoor" class="pointer door-link"  alt="Exit Door" title="Exit Door" href="computers.html" coords="231,2687,0,1080" shape="rect">
 
-    <div id="textbox"></div>
-</body>
+</map>
+
+<div id="textbox"></div>
 
 <script src="imageMapResizer.min.js"></script>
 <script src="script.js"></script>
 <script>
-    imageMapResize();
-
-    const exitDoor = document.getElementById("exitDoor");
+        imageMapResize();
+        
+         const exitDoor = document.getElementById("exitDoor");
     let tvWatched = false;
 
     dialogue = [];
@@ -44,10 +40,8 @@
             if (property == "textIndex" && value == 0
                 && target.dialogueIndex == dialogue.length
                 && tvWatched) {
-                exitDoor.style.pointerEvents = "auto";
-                exitDoor.style.cursor = "url('images/pointerClick.png'), pointer";
-                exitDoor.href = "computers.html";
-                exitDoor.onclick = null;
+                exitDoor.setAttribute("href", "computers.html");
+                exitDoor.style.cursor = "pointer";
             }
             return target[property] = value;
         }
@@ -59,7 +53,7 @@
         proxy.textIndex = 0;
 
         
-        exitDoor.style.pointerEvents = "none";
+        exitDoor.removeAttribute("href");
         exitDoor.style.cursor = "not-allowed";
 
         
@@ -71,6 +65,9 @@
             closeTextbox();
         }
     }
+
+    // Override enableDoor so only the proxy handler controls the exit door
+    enableDoor = function() {};
 
     function showTVMessage() {
         tvWatched = true;
@@ -84,24 +81,7 @@
         addDialogue(newSentences);
     }
 
-    function addTvDialogue() {
-        if (!tvWatched) {
-            showTVMessage();
-        } else {
-            let newDialogue = ["The TV has nothing more to show."];
-            addDialogue(newDialogue);
-        }
-    }
-
-    function addRoomDialogue() {
-        let newDialogue = ["Just a study room... I was supposed to be preparing for my final exam."];
-        addDialogue(newDialogue);
-    }
-
-    function addDoorDialogue() {
-        let newDialogue = ["The door is locked. Maybe there's a clue somewhere in this room."];
-        addDialogue(newDialogue);
-    }
+    
 
     window.onload = setup;
 </script>
