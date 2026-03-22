@@ -118,8 +118,8 @@
 
     <div id="bulletin">
         <div style="position: relative; left: 2px; top: 4px;" class="poster">
-            <p>Rivalry Cookout</p>
-            <p>Bring your least favorite mascot! </p>
+            <p>UGAHacks12t</p>
+            <p>36 hours. No sleep. Free pizza! </p>
         </div>
         <div style="position: relative; left: 6px;" class="poster">
             <p>Conjuring Circle </p>
@@ -144,8 +144,8 @@
             <p>May 32, 2026</p>
         </div>
         <div style="position: relative; left: 12px; top: 15px;" class="poster">
-            <p>Poll: Cheese Cake or Cake Cheese? </p>
-            <p>Write your answers below</p>
+            <p>Study Away Fair </p>
+            <p>There IS wifi in Italy. We checked.</p>
             <p>May 32, 2026</p>
         </div>
         <div style="position: relative; left: 55px; top: 0px;" class="poster">
@@ -214,15 +214,13 @@
         if (answer === "stack" || answer === "a stack" || answer === "the stack") {
             addCorrectDialogue();
         } else {
-            alert("The AI snickers: 'Wrong! Think about stacking plates — you always take from the top...'");
+            alert("'Wrong! Think about stacking plates — you always take from the top...'");
         }
     }
 
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
         let newDialogue = ["The poster glows green — you passed the quiz!",
-            "A message flashes on the elevator display: 'As a reward, here's a classic secret...'",
-            "'The most famous cheat code in gaming history was: Up, Up, Down, Down, Left, Right, Left, Right.'",
             "The elevator buttons flicker to life! Enter the code: Up, Up, Down, Down."
         ];
         addDialogue(newDialogue);
