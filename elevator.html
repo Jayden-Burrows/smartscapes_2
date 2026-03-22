@@ -105,9 +105,9 @@
     </map>
     <div id="textbox"></div>
     <div id="modal">
-        <p id="question"> Sample Question: What color is the sky? </p>
-        <input id="input" type="text">
-        <button id="answerBtn" onClick="addCorrectDialogue()"> Submit </button>
+        <p id="question"> In programming, what data structure follows "Last In, First Out" (LIFO) order? </p>
+        <input id="input" type="text" placeholder="Type your answer...">
+        <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
     </div>
 
     <div id="buttonControls"> 
@@ -171,8 +171,10 @@
 
     let posterTouched = false;
 
-    dialogue = ["The player would come down from the third floor. They would comment on the elevators being disabled and all the exits being locked",
-        "Placeholder for a riddle from the third floor. The answer would be to click the cash register"
+    dialogue = ["You step out into the elevator lobby. The doors are sealed shut and the call buttons are dark. The AI has locked everything down.",
+        "The AI's voice echoes from above: 'One more test, human. Solve this and maybe I'll let you go...'",
+        "'I hold many messages but cannot speak. I'm covered in layers but I'm not a cake. Students pin their hopes on me each day. Find me on this wall and you'll find your way.'",
+        "Look around the room... what's covered in posted messages?",
     ];
 
     let handler = {
@@ -202,17 +204,26 @@
         posterTouched = true;
         bulletin.style.visibility = "hidden";
         let newDialogue = ["'Maybe this is what that AI was talking about.",
-            "You scan the QR code to start the quiz."
+            
         ];
         addDialogue(newDialogue);
     }
 
+    function checkAnswer() {
+        const answer = document.getElementById("input").value.trim().toLowerCase();
+        if (answer === "stack" || answer === "a stack" || answer === "the stack") {
+            addCorrectDialogue();
+        } else {
+            alert("The AI snickers: 'Wrong! Think about stacking plates — you always take from the top...'");
+        }
+    }
+
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        let newDialogue = ["Congrats, you passed the quiz. ",
-            "As a celebrating fun fact, the cheat code for many old games was...",
-            "Up, up, down, down, left, right, left, right",
-            "click the elevator buttons now: up, up, down, down"
+        let newDialogue = ["The poster glows green — you passed the quiz!",
+            "A message flashes on the elevator display: 'As a reward, here's a classic secret...'",
+            "'The most famous cheat code in gaming history was: Up, Up, Down, Down, Left, Right, Left, Right.'",
+            "The elevator buttons flicker to life! Enter the code: Up, Up, Down, Down."
         ];
         addDialogue(newDialogue);
     }

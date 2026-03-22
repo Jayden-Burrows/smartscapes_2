@@ -22,9 +22,9 @@
     </map>
     <div id="textbox"></div>
     <div id="modal">
-        <p id="question"> Sample Question: What color is the sky? </p>
-        <input id="input" type="text">
-        <button id="answerBtn" onClick="addCorrectDialogue()"> Submit </button>
+        <p id="question"> The register springs open! A receipt inside reads: "In computing, what number system uses only 0s and 1s?" </p>
+        <input id="input" type="text" placeholder="Type your answer...">
+        <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
     </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
@@ -34,8 +34,10 @@
 
     const elevator = document.getElementById("elevator");
 
-    dialogue = ["The player would come down from the third floor. They would comment on the elevators being disabled and all the exits being locked",
-        "Placeholder for a riddle from the third floor. The answer would be to click the cash register"
+    dialogue = ["You made it down to the first floor... but of course, the elevators are disabled and every exit is sealed shut.",
+        "The AI's voice crackles from a speaker overhead: 'Hungry for freedom? Solve this first...'",
+        "'I have keys but open no locks. I have a drawer but hold no socks. In this café I sit and wait — tap my buttons to seal your fate.'",
+        "Hmm... look around the café. What has keys and a drawer?"
     ];
 
     function setup() {
@@ -55,10 +57,20 @@
         modal.style.visibility = "visible";
     }
 
+    function checkAnswer() {
+        const answer = document.getElementById("input").value.trim().toLowerCase();
+        if (answer === "binary" || answer === "base 2" || answer === "base-2" || answer === "base two") {
+            addCorrectDialogue();
+        } else {
+            alert("The AI laughs: 'Wrong! Think about how computers speak at the lowest level...'");
+        }
+    }
+
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        let newDialogue = ["This would be a riddle that would lead the player to the elevator",
-            "Click the left side of the screen to go the elevators"
+        let newDialogue = ["The receipt fades and new text burns across the register screen: 'ELEVATOR ACCESS RESTORED — FLOOR 1'",
+            "You hear a mechanical click from the far left of the hallway. The elevators!",
+            "Head to the elevators on the left side of the hall."
         ];
         addDialogue(newDialogue);
         elevator.href = "elevator.html";
