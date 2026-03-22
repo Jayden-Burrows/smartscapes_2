@@ -89,16 +89,16 @@
     <div id="textbox"></div>
 
     <div id="modal">
-        <p id="question"> What does the acronym P.A.S.S. stand for in fire safety? </p>
+        <p id="question"> What is the order of the box model outer to inner? </p>
         <input id="input" type="text">
         <button id="answerBtn" onclick="checkAnswer()"> Submit </button>
     </div>
 
-    <div id="fireAlarmPanel" style="position: relative;">
+    <div id="fireAlarmPanel">
         <button class="pointer" id="closeAlarmPanel" onclick="closeAlarmPanel()">X</button>
         <h2>🔥 FIRE ALARM 🔥</h2>
         <p>In case of emergency, pull the handle.</p>
-        <p>Think before you act — do you know fire safety?</p>
+        <p>Think before you act — do you know Web Programming?</p>
         <button id="pullHandle" onclick="pullAlarm()">PULL</button>
     </div>
 </body>
@@ -158,11 +158,11 @@
     }
 
     function checkAnswer() {
-        let answer = document.getElementById("input").value.trim().toLowerCase();
-        if (answer.includes("pull") && answer.includes("aim") && answer.includes("squeeze") && answer.includes("sweep")) {
+        let answer = document.getElementById("input").value.trim().toLowerCase().replace(/\s/g, "");
+        if (answer.includes("margin") && answer.includes("border") && answer.includes("padding") && answer.includes("content")) {
             modal.style.visibility = "hidden";
             let newDialogue = [
-                "Correct! Pull, Aim, Squeeze, Sweep.",
+                "Correct! Margin, Border, Padding, Content.",
                 "The fire exit door clicks open!",
                 "You can now leave through the exit."
             ];
@@ -171,7 +171,7 @@
             exitDoor.onclick = null;
         } else {
             let newDialogue = [
-                "That's not right. Think about fire extinguisher steps..."
+                "That's not right. Think about how the box model works..."
             ];
             modal.style.visibility = "hidden";
             addDialogue(newDialogue);
