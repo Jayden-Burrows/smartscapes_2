@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        img[usemap] {
-            object-fit: cover;
-        }
-    </style>
 </head>
 
 <body>
@@ -32,8 +27,6 @@
         
          const exitDoor = document.getElementById("exitDoor");
     let tvWatched = false;
-
-    dialogue = [];
 
     let handler = {
         set(target, property, value, receiver) {
@@ -61,7 +54,11 @@
         if (urlParams.get('fromTV') === 'true') {
             showTVMessage();
         } else {
-            closeTextbox();
+            dialogue = [
+                "While studying for your upcoming exam, you hear door lock and the tv start to crackle.",
+                "What is happening? It feels like the security system has gone into lockdown."
+            ];
+            handleTextbox();
         }
     }
 
@@ -71,7 +68,6 @@
     function showTVMessage() {
         tvWatched = true;
         let newSentences = [
-            "What is happening? It feels like the security system has gone into lockdown.",
             "'Each room in this building holds a task. Solve them, and you will regain your freedom in time for the exam.'",
             "You hear the door unlock.",
             "...I need to think carefully.",
