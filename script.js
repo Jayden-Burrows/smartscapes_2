@@ -1,7 +1,7 @@
 const textBox = document.getElementById("textbox");
 const modal = document.getElementById("modal");
 
-const typeSpeed = 15; // milliseconds per character
+const typeSpeed = 12; // milliseconds per character
 
 // Global vNriable to track if dialogue is complete
 let isDialogueComplete = false;

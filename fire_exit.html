@@ -110,6 +110,15 @@
 <script>
     imageMapResize();
 
+    const input = document.getElementById("input");
+    
+    input.addEventListener("keydown", function(event) {
+        // Check if the key pressed is "Enter"
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+
     const fireAlarmPanel = document.getElementById("fireAlarmPanel");
     const exitDoor = document.getElementById("exitDoor");
 

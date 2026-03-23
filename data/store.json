@@ -96,6 +96,15 @@
         "elevator"
       ],
       "createdAt": "2026-03-23T21:09:12.319085+00:00"
+    },
+    "301726e997bb46eab97d98f5b12ff174": {
+      "name": "jayden",
+      "activityCode": "DEMO123",
+      "completedRooms": [
+        "jittery_joes",
+        "fire_exit"
+      ],
+      "createdAt": "2026-03-23T22:32:37.659283+00:00"
     }
   },
   "attempts": [
@@ -224,6 +233,69 @@
       "answer": "stack",
       "correct": true,
       "timestamp": "2026-03-23T21:11:01.573944+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:33:28.629994+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:34:18.443745+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:37:26.057978+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:39:25.260685+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:40:53.161622+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:41:45.120547+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:42:38.333038+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T22:43:21.463070+00:00"
+    },
+    {
+      "sessionId": "301726e997bb46eab97d98f5b12ff174",
+      "roomId": "fire_exit",
+      "answer": "margin,border,padding,content",
+      "correct": true,
+      "timestamp": "2026-03-23T22:50:20.653826+00:00"
     }
   ]
 }

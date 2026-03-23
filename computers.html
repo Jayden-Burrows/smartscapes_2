@@ -187,6 +187,14 @@
     const hallway = document.getElementById("hallway");
 
     const input = document.getElementById("input");
+    
+    input.addEventListener("keydown", function(event) {
+        // Check if the key pressed is "Enter"
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+
     const loginInput = document.getElementById("loginInput");
     const computerScreen = document.getElementById("computerScreen");
     const hint = document.getElementById("question");

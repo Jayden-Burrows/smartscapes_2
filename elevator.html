@@ -162,6 +162,15 @@
 <script>
     imageMapResize();
 
+    const input = document.getElementById("input");
+   
+    input.addEventListener("keydown", function(event) {
+        // Check if the key pressed is "Enter"
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+
     const elevator1 = document.getElementById("elevator1");
     const elevator2 = document.getElementById("elevator2");
 
@@ -234,7 +243,7 @@
 
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        let newDialogue = ["The poster glows green — you passed the quiz!",
+        let newDialogue = ["Your phone screen glows green — you passed the quiz!",
             "The elevator buttons flicker to life! Enter the code: Up, Up, Down, Down."
         ];
         addDialogue(newDialogue);

@@ -7,7 +7,11 @@
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        #flicker-overlay {
+        #textbox {
+            z-index: 2;
+        }
+
+        #fade-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -15,25 +19,13 @@
             height: 100%;
             background-color: rgba(10, 20, 60, 1);
             pointer-events: none;
-            z-index: 9999;
-            opacity: 0;
+            z-index: 1;
+            opacity: 40%;
             transition: none;
         }
 
-        @keyframes flicker {
-            0%   { opacity: 0; }
-            5%   { opacity: 0.95; }
-            10%  { opacity: 0.3; }
-            15%  { opacity: 0.85; }
-            25%  { opacity: 0.1; }
-            35%  { opacity: 0.9; }
-            40%  { opacity: 0.4; }
-            50%  { opacity: 0.75; }
-            55%  { opacity: 0.2; }
-            65%  { opacity: 0.6; }
-            75%  { opacity: 0.15; }
-            85%  { opacity: 0.08; }
-            92%  { opacity: 0.03; }
+        @keyframes fade {
+            0%   { opacity: 40%; }
             100% { opacity: 0; }
         }
     </style>
@@ -50,8 +42,8 @@
         <area target="_self" id="door3" class="pointer door-link" alt="Main Exit" title="Main Exit" href="final.html" coords="4291,1444,4661,2542"
             shape="rect">
     </map>
+    <div id="fade-overlay"></div>
     <div id="textbox"></div>
-    <div id="flicker-overlay"></div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
 <script src="game_api.js"></script>
@@ -69,9 +61,9 @@
         "The main exit doors click open. Daylight floods in. Time to get out of here — and maybe still make it to that exam."
     ];
 
-    function flickerThenUnlock() {
-        const overlay = document.getElementById("flicker-overlay");
-        overlay.style.animation = "flicker 3s ease-out forwards";
+    function fadeThenUnlock() {
+        const overlay = document.getElementById("fade-overlay");
+        overlay.style.animation = "fade 3s ease-out forwards";
         setTimeout(function() {
             overlay.style.opacity = "0";
             door1.onclick = null;
@@ -86,9 +78,8 @@
     let handler = {
         set(target, property, value, receiver) {
             target[property] = value;
-            if (property === "textIndex" && value === 0
-                && target.dialogueIndex === dialogue.length) {
-                flickerThenUnlock();
+            if (property === "dialogueIndex" && value === 2) {
+                fadeThenUnlock();
             }
             return true;
         }
