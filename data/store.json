@@ -82,7 +82,8 @@
       "activityCode": "DEMO123",
       "completedRooms": [
         "computers",
-        "jittery_joes"
+        "jittery_joes",
+        "elevator"
       ],
       "createdAt": "2026-03-23T16:04:44.017709+00:00"
     }
@@ -178,6 +179,13 @@
       "answer": "binary",
       "correct": true,
       "timestamp": "2026-03-23T16:06:20.925749+00:00"
+    },
+    {
+      "sessionId": "3ef7ea63260b4191902a972ca212b06f",
+      "roomId": "elevator",
+      "answer": "stack",
+      "correct": true,
+      "timestamp": "2026-03-23T16:31:27.955753+00:00"
     }
   ]
 }
