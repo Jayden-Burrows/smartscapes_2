@@ -66,6 +66,16 @@
         "jittery_joes"
       ],
       "createdAt": "2026-03-23T15:04:06.774765+00:00"
+    },
+    "36bd8c044e3e48199215e25a8fa60130": {
+      "name": "Sumana",
+      "activityCode": "DEMO123",
+      "completedRooms": [
+        "computers",
+        "elevator",
+        "jittery_joes"
+      ],
+      "createdAt": "2026-03-23T15:49:38.271536+00:00"
     }
   },
   "attempts": [
@@ -96,6 +106,34 @@
       "answer": "binary",
       "correct": true,
       "timestamp": "2026-03-23T15:06:21.700060+00:00"
+    },
+    {
+      "sessionId": "36bd8c044e3e48199215e25a8fa60130",
+      "roomId": "computers",
+      "answer": "central processing unit",
+      "correct": true,
+      "timestamp": "2026-03-23T15:49:54.525909+00:00"
+    },
+    {
+      "sessionId": "36bd8c044e3e48199215e25a8fa60130",
+      "roomId": "fire_exit",
+      "answer": "margin,border,padding,andcontent.",
+      "correct": false,
+      "timestamp": "2026-03-23T15:50:10.634344+00:00"
+    },
+    {
+      "sessionId": "36bd8c044e3e48199215e25a8fa60130",
+      "roomId": "elevator",
+      "answer": "stack",
+      "correct": true,
+      "timestamp": "2026-03-23T15:50:37.381041+00:00"
+    },
+    {
+      "sessionId": "36bd8c044e3e48199215e25a8fa60130",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T15:51:15.371468+00:00"
     }
   ]
 }

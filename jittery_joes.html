@@ -6,6 +6,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartScapes</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        #coffeeMachine {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c1a0e;
+            border: 5px ridge #8b6914;
+            width: min(90vw, 400px);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            visibility: hidden;
+        }
+
+        #coffeeMachine h2 {
+            color: #f5deb3;
+            font-family: "Pixelify Sans", sans-serif;
+            margin: 5px;
+            font-size: min(6vw, 22px);
+        }
+
+        #coffeeMachine p {
+            color: #deb887;
+            font-family: sans-serif;
+            font-size: min(4vw, 14px);
+            margin: 5px;
+            text-align: center;
+        }
+
+        #brewDisplay {
+            background-color: #1a0f05;
+            border: 2px solid #8b6914;
+            border-radius: 5px;
+            width: 90%;
+            min-height: 40px;
+            padding: 8px;
+            margin: 10px 0;
+            color: #00ff00;
+            font-family: monospace;
+            font-size: min(4vw, 14px);
+            text-align: center;
+        }
+
+        .brew-btn {
+            background-color: #8b6914;
+            color: white;
+            border: 2px solid #daa520;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: min(4vw, 14px);
+            font-family: "Pixelify Sans", sans-serif;
+        }
+
+        .brew-btn:hover {
+            background-color: #daa520;
+        }
+
+        #brewButtons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        #resetBrew {
+            background-color: #8b0000;
+            color: white;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 6px 14px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: min(3.5vw, 12px);
+        }
+    </style>
 </head>
 
 <body>
@@ -14,9 +94,9 @@
     <map name="cafe-map">
         <area target="_self" class="pointer" onclick="showPuzzle()" alt="Cash Register" title="Cash Register"
             href="javascript:void(0)" coords="2555,1900,2800,2071" shape="rect">
-        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
+        <area target="_self" class="pointer" onclick="addTv1Dialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
             coords="2236,1393,2865,1744" shape="rect">
-        <area target="_self" class="pointer" onclick="addTvDialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
+        <area target="_self" class="pointer" onclick="addTv2Dialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
             coords="3221,1393,3795,1726" shape="rect">
         <area id="elevator" target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevators" title="Elevators" href="javascript:void(0)" coords="6,1,978,2783" shape="rect">    
     </map>
@@ -25,6 +105,18 @@
         <p id="question"> The register springs open! A receipt inside reads: "In computing, what number system uses only 0s and 1s?" </p>
         <input id="input" type="text" placeholder="Type your answer...">
         <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
+    </div>
+    <div id="coffeeMachine">
+        <h2>&#9749; Coffee Machine</h2>
+        <p>Brew the perfect escape latte! Add ingredients in the right order.</p>
+        <div id="brewDisplay">Ready to brew...</div>
+        <div id="brewButtons">
+            <button class="brew-btn" onclick="addIngredient('sugar')">Sugar</button>
+            <button class="brew-btn" onclick="addIngredient('milk')">Milk</button>
+            <button class="brew-btn" onclick="addIngredient('espresso')">Espresso</button>
+            <button class="brew-btn" onclick="addIngredient('stir')">Stir</button>
+        </div>
+        <button id="resetBrew" onclick="resetBrew()">Reset</button>
     </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
@@ -37,6 +129,11 @@
     const elevator = document.getElementById("elevator");
     let fallbackAnswers = ["binary", "base 2", "base-2", "base two"];
 
+    let tv1Watched = false;
+    let tv2Watched = false;
+    let brewSequence = [];
+    const correctSequence = ["milk", "espresso", "sugar", "stir"];
+
     async function loadRoomQuestion() {
         const fallbackQuestion = "The register springs open! A receipt inside reads: \"In computing, what number system uses only 0s and 1s?\"";
         const payload = await SmartScapesAPI.resolveQuestion("jittery_joes", fallbackQuestion, fallbackAnswers, "question");
@@ -46,7 +143,7 @@
     dialogue = ["You made it down to the first floor... but of course, the elevators are disabled and every exit is sealed shut.",
         "The AI's voice crackles from a speaker overhead: 'Hungry for freedom? Solve this first...'",
         "'I have keys but open no locks. I have a drawer but hold no socks. In this café I sit and wait — tap my buttons to seal your fate.'",
-        "Hmm... look around the café. What has keys and a drawer?"
+        "Hmm... look around the café. What has keys and a drawer? Maybe the TVs have some useful information too."
     ];
 
     function setup() {
@@ -61,12 +158,42 @@
         handleTextbox();
     }
 
-    function addTvDialogue() {
-        let newDialogue = ["Nothing here"];
-        addDialogue(newDialogue);
+    function addTv1Dialogue() {
+        if (!tv1Watched) {
+            tv1Watched = true;
+            let newDialogue = [
+                "The screen flickers on... it's playing a café training video.",
+                "'Welcome to Jittery Joe's! Step 1: Always start with MILK. Step 2: Add a shot of ESPRESSO.'",
+                "Interesting... I should remember that order."
+            ];
+            addDialogue(newDialogue);
+        } else {
+            let newDialogue = ["The training video replays: 'Step 1: MILK. Step 2: ESPRESSO.'"];
+            addDialogue(newDialogue);
+        }
+    }
+
+    function addTv2Dialogue() {
+        if (!tv2Watched) {
+            tv2Watched = true;
+            let newDialogue = [
+                "This TV is playing a different part of the training video.",
+                "'Step 3: Sweeten with SUGAR. Step 4: Always finish with a STIR. That's the Jittery Joe's way!'",
+                "So there's a specific order to making their drinks..."
+            ];
+            addDialogue(newDialogue);
+        } else {
+            let newDialogue = ["The training video replays: 'Step 3: SUGAR. Step 4: STIR.'"];
+            addDialogue(newDialogue);
+        }
     }
 
     function showPuzzle() {
+        if (!tv1Watched || !tv2Watched) {
+            let newDialogue = ["The register is locked tight. Maybe there's something else in this café that could help... the TVs are still on."];
+            addDialogue(newDialogue);
+            return;
+        }
         modal.style.visibility = "visible";
     }
 
@@ -82,17 +209,54 @@
 
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        let newDialogue = ["The receipt fades and new text burns across the register screen: 'ELEVATOR ACCESS RESTORED — FLOOR 1'",
-            "You hear a heavy lock release near the front exits.",
-            "Head toward the first floor main exits."
+        document.getElementById("coffeeMachine").style.visibility = "visible";
+        let newDialogue = [
+            "The AI's voice crackles: 'Not bad... but knowing facts isn't enough.'",
+            "'Prove you were paying attention. Brew me the perfect Jittery Joe's latte — in the RIGHT order.'",
+            "The coffee machine lights up. I need to remember what those training videos said..."
         ];
         addDialogue(newDialogue);
-        elevator.href = "first_floor.html";
-        elevator.onclick = "javascript:void(0)";
+    }
+
+    function addIngredient(ingredient) {
+        brewSequence.push(ingredient);
+        document.getElementById("brewDisplay").textContent = brewSequence.map(function(i) { return i.toUpperCase(); }).join(" \u2192 ");
+
+        if (brewSequence.length === correctSequence.length) {
+            checkBrewSequence();
+        }
+    }
+
+    function resetBrew() {
+        brewSequence = [];
+        document.getElementById("brewDisplay").textContent = "Ready to brew...";
+    }
+
+    function checkBrewSequence() {
+        const isCorrect = brewSequence.every(function(val, idx) { return val === correctSequence[idx]; });
+        if (isCorrect) {
+            document.getElementById("coffeeMachine").style.visibility = "hidden";
+            let newDialogue = [
+                "The coffee machine whirs to life and produces a perfect latte!",
+                "The receipt printer buzzes: 'ELEVATOR ACCESS RESTORED \u2014 FLOOR 2'",
+                "You hear a heavy lock release near the front exits.",
+                "Head toward the elevator."
+            ];
+            addDialogue(newDialogue);
+            elevator.href = "elevator.html";
+            elevator.onclick = "javascript:void(0)";
+        } else {
+            let newDialogue = [
+                "The machine sputters and resets. That wasn't the right order...",
+                "Think about what the training videos said."
+            ];
+            addDialogue(newDialogue);
+            resetBrew();
+        }
     }
 
     function addElevatorDialogue() {
-        let newDialogue = ["Nothing now"]
+        let newDialogue = ["The elevators are completely locked down. I need to solve the café's puzzle first."];
         addDialogue(newDialogue);
     }
 
