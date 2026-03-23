@@ -98,11 +98,13 @@
             coords="2236,1393,2865,1744" shape="rect">
         <area target="_self" class="pointer" onclick="addTv2Dialogue()" alt="Tv" title="Tv" href="javascript:void(0)"
             coords="3221,1393,3795,1726" shape="rect">
-        <area id="elevator" target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevators" title="Elevators" href="javascript:void(0)" coords="6,1,978,2783" shape="rect">    
+        <area id="elevator" target="_self" class="pointer" onclick="addElevatorDialogue()" alt="Elevators"
+            title="Elevators" href="javascript:void(0)" coords="6,1,978,2783" shape="rect">
     </map>
     <div id="textbox"></div>
     <div id="modal">
-        <p id="question"> The register springs open! A receipt inside reads: "In computing, what number system uses only 0s and 1s?" </p>
+        <p id="question"> The register springs open! A receipt inside reads: "In computing, what number system uses only
+            0s and 1s?" </p>
         <input id="input" type="text" placeholder="Type your answer...">
         <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
     </div>
@@ -146,11 +148,20 @@
         "Hmm... look around the café. What has keys and a drawer? Maybe the TVs have some useful information too."
     ];
 
+    let handler = {
+        set(target, property, value, receiver) {
+            if (property == "dialogueIndex" 
+            && dialogue[value] == "The coffee machine lights up. I need to remember what those training videos said...") {
+                document.getElementById("coffeeMachine").style.visibility = "visible";
+            }
+            return target[property] = value;
+        }
+    };
+
     function setup() {
         if (!SmartScapesAPI.requireSession()) {
             return;
         }
-        handler = dialogueHandler;
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -209,7 +220,6 @@
 
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
-        document.getElementById("coffeeMachine").style.visibility = "visible";
         let newDialogue = [
             "The AI's voice crackles: 'Not bad... but knowing facts isn't enough.'",
             "'Prove you were paying attention. Brew me the perfect Jittery Joe's latte — in the RIGHT order.'",
@@ -220,7 +230,7 @@
 
     function addIngredient(ingredient) {
         brewSequence.push(ingredient);
-        document.getElementById("brewDisplay").textContent = brewSequence.map(function(i) { return i.toUpperCase(); }).join(" \u2192 ");
+        document.getElementById("brewDisplay").textContent = brewSequence.map(function (i) { return i.toUpperCase(); }).join(" \u2192 ");
 
         if (brewSequence.length === correctSequence.length) {
             checkBrewSequence();
@@ -233,7 +243,7 @@
     }
 
     function checkBrewSequence() {
-        const isCorrect = brewSequence.every(function(val, idx) { return val === correctSequence[idx]; });
+        const isCorrect = brewSequence.every(function (val, idx) { return val === correctSequence[idx]; });
         if (isCorrect) {
             document.getElementById("coffeeMachine").style.visibility = "hidden";
             let newDialogue = [
