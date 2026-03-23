@@ -12,19 +12,14 @@
     <img src="static/images/first_floor_main_exit.JPG" usemap="#first-floor-map">
 
     <map name="first-floor-map">
-        <area target="_self" id="door1" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="2224,1487,3170,2651"
+        <area target="_self" id="door1" class="pointer door-link" alt="Main Exit" title="Main Exit" href="final.html" coords="2224,1487,3170,2651"
             shape="rect">
-        <area target="_self" id="door2" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="581,2814,4,1564"
+        <area target="_self" id="door2" class="pointer door-link" alt="Main Exit" title="Main Exit" href="final.html" coords="581,2814,4,1564"
             shape="rect">
-        <area target="_self" id="door3" class="pointer" onclick="showPuzzle()" alt="Main Exit" title="Main Exit" href="javascript:void(0)" coords="4291,1444,4661,2542"
+        <area target="_self" id="door3" class="pointer door-link" alt="Main Exit" title="Main Exit" href="final.html" coords="4291,1444,4661,2542"
             shape="rect">
     </map>
     <div id="textbox"></div>
-    <div id="modal">
-        <p id="question"> Sample Question: What color is the sky? </p>
-        <input id="input" type="text">
-        <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
-    </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
 <script src="game_api.js"></script>
@@ -36,63 +31,48 @@
     const door1 = document.getElementById("door1");
     const door2 = document.getElementById("door2");
     const door3 = document.getElementById("door3");
-    let fallbackAnswers = ["blue"];
 
-    async function loadRoomQuestion() {
-        const fallbackQuestion = "Final checkpoint: what color is the sky on a clear day?";
-        const payload = await SmartScapesAPI.resolveQuestion("first_floor", fallbackQuestion, fallbackAnswers, "question");
-        fallbackAnswers = payload.fallbackAnswers;
-    }
-    
+    dialogue = [
+        "The AI's voice fizzles from the speakers one last time: 'Fine... you win. But don't think this is over. I'll be smarter next time.'",
+        "The main exit doors click open. Daylight floods in. Time to get out of here — and maybe still make it to that exam."
+    ];
 
-    dialogue = ["There would be some riddle here or something."];
+    let handler = {
+        set(target, property, value, receiver) {
+            target[property] = value;
+            if (property === "textIndex" && value === 0
+                && target.dialogueIndex === dialogue.length) {
+                door1.onclick = null;
+                door2.onclick = null;
+                door3.onclick = null;
+                door1.style.cursor = "pointer";
+                door2.style.cursor = "pointer";
+                door3.style.cursor = "pointer";
+            }
+            return true;
+        }
+    };
 
     function setup() {
         if (!SmartScapesAPI.requireSession()) {
             return;
         }
-        handler = dialogueHandler;
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
-        loadRoomQuestion();
+
+        // Lock doors until dialogue finishes
+        door1.onclick = function(e) { e.preventDefault(); };
+        door2.onclick = function(e) { e.preventDefault(); };
+        door3.onclick = function(e) { e.preventDefault(); };
+        door1.style.cursor = "not-allowed";
+        door2.style.cursor = "not-allowed";
+        door3.style.cursor = "not-allowed";
+
+        // Override enableDoor so only the proxy handler controls the doors
+        enableDoor = function() {};
+
         handleTextbox();
-    }
-
-    function addTvDialogue() {
-        let newDialogue = ["Nothing here"];
-        addDialogue(newDialogue);
-    }
-
-    function showPuzzle() {
-        modal.style.visibility = "visible";
-        door1.onclick="javascript:void(0)";
-        door2.onclick="javascript:void(0)";
-        door3.onclick="javascript:void(0)";
-    }
-
-    async function checkAnswer() {
-        const answer = document.getElementById("input").value.trim().toLowerCase();
-        const correct = await SmartScapesAPI.validateAnswer("first_floor", answer, fallbackAnswers);
-        if (correct) {
-            addCorrectDialogue();
-        } else {
-            alert("Not quite. Try once more.");
-        }
-    }
-
-    function addCorrectDialogue() {
-        modal.style.visibility = "hidden";
-        let newDialogue = ["Click the main exit doors. any of them"];
-        addDialogue(newDialogue);
-        door1.href="final.html"
-        door2.href="final.html"
-        door3.href="final.html"
-    }
-
-    function addElevatorDialogue() {
-        let newDialogue = ["Nothing now"]
-        addDialogue(newDialogue);
     }
 
     window.onload = setup;
