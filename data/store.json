@@ -76,6 +76,15 @@
         "jittery_joes"
       ],
       "createdAt": "2026-03-23T15:49:38.271536+00:00"
+    },
+    "3ef7ea63260b4191902a972ca212b06f": {
+      "name": "Sumana",
+      "activityCode": "DEMO123",
+      "completedRooms": [
+        "computers",
+        "jittery_joes"
+      ],
+      "createdAt": "2026-03-23T16:04:44.017709+00:00"
     }
   },
   "attempts": [
@@ -134,6 +143,41 @@
       "answer": "binary",
       "correct": true,
       "timestamp": "2026-03-23T15:51:15.371468+00:00"
+    },
+    {
+      "sessionId": "36bd8c044e3e48199215e25a8fa60130",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T15:59:48.231492+00:00"
+    },
+    {
+      "sessionId": "3ef7ea63260b4191902a972ca212b06f",
+      "roomId": "computers",
+      "answer": "margin,border,padding, and content.",
+      "correct": false,
+      "timestamp": "2026-03-23T16:05:01.472656+00:00"
+    },
+    {
+      "sessionId": "3ef7ea63260b4191902a972ca212b06f",
+      "roomId": "computers",
+      "answer": "central processing unit",
+      "correct": true,
+      "timestamp": "2026-03-23T16:05:03.878125+00:00"
+    },
+    {
+      "sessionId": "3ef7ea63260b4191902a972ca212b06f",
+      "roomId": "fire_exit",
+      "answer": "margin,border,padding,andcontent.",
+      "correct": false,
+      "timestamp": "2026-03-23T16:05:26.277427+00:00"
+    },
+    {
+      "sessionId": "3ef7ea63260b4191902a972ca212b06f",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-23T16:06:20.925749+00:00"
     }
   ]
 }
