@@ -104,6 +104,8 @@
 </body>
 
 <script src="imageMapResizer.min.js"></script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
@@ -112,6 +114,13 @@
     const exitDoor = document.getElementById("exitDoor");
 
     let alarmPulled = false;
+    let fallbackAnswers = ["margin border padding content", "margin,border,padding,content"];
+
+    async function loadRoomQuestion() {
+        const fallbackQuestion = "What is the order of the box model outer to inner?";
+        const payload = await SmartScapesAPI.resolveQuestion("fire_exit", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+    }
 
     dialogue = [
         "You find yourself in a hallway near the fire exit.",
@@ -132,9 +141,13 @@
     };
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
+        loadRoomQuestion();
         handleTextbox();
     }
 
@@ -157,9 +170,11 @@
         addDialogue(newDialogue);
     }
 
-    function checkAnswer() {
+    async function checkAnswer() {
         let answer = document.getElementById("input").value.trim().toLowerCase().replace(/\s/g, "");
-        if (answer.includes("margin") && answer.includes("border") && answer.includes("padding") && answer.includes("content")) {
+        const apiCorrect = await SmartScapesAPI.validateAnswer("fire_exit", answer, fallbackAnswers);
+        const localCorrect = answer.includes("margin") && answer.includes("border") && answer.includes("padding") && answer.includes("content");
+        if (apiCorrect || localCorrect) {
             modal.style.visibility = "hidden";
             let newDialogue = [
                 "Correct! Margin, Border, Padding, Content.",
@@ -167,7 +182,7 @@
                 "You can now leave through the exit."
             ];
             addDialogue(newDialogue);
-            exitDoor.href = "first_floor.html";
+            exitDoor.href = "elevator.html";
             exitDoor.onclick = null;
         } else {
             let newDialogue = [

@@ -23,10 +23,12 @@
     <div id="modal">
         <p id="question"> Sample Question: What color is the sky? </p>
         <input id="input" type="text">
-        <button id="answerBtn" onClick="addCorrectDialogue()"> Submit </button>
+        <button id="answerBtn" onClick="checkAnswer()"> Submit </button>
     </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
@@ -34,15 +36,26 @@
     const door1 = document.getElementById("door1");
     const door2 = document.getElementById("door2");
     const door3 = document.getElementById("door3");
+    let fallbackAnswers = ["blue"];
+
+    async function loadRoomQuestion() {
+        const fallbackQuestion = "Final checkpoint: what color is the sky on a clear day?";
+        const payload = await SmartScapesAPI.resolveQuestion("first_floor", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+    }
     
 
     dialogue = ["There would be some riddle here or something."];
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         handler = dialogueHandler;
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
+        loadRoomQuestion();
         handleTextbox();
     }
 
@@ -58,13 +71,23 @@
         door3.onclick="javascript:void(0)";
     }
 
+    async function checkAnswer() {
+        const answer = document.getElementById("input").value.trim().toLowerCase();
+        const correct = await SmartScapesAPI.validateAnswer("first_floor", answer, fallbackAnswers);
+        if (correct) {
+            addCorrectDialogue();
+        } else {
+            alert("Not quite. Try once more.");
+        }
+    }
+
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
         let newDialogue = ["Click the main exit doors. any of them"];
         addDialogue(newDialogue);
         door1.href="final.html"
-        door1.href="final.html"
-        door1.href="final.html"
+        door2.href="final.html"
+        door3.href="final.html"
     }
 
     function addElevatorDialogue() {

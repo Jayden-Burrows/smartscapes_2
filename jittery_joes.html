@@ -28,11 +28,20 @@
     </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
 
     const elevator = document.getElementById("elevator");
+    let fallbackAnswers = ["binary", "base 2", "base-2", "base two"];
+
+    async function loadRoomQuestion() {
+        const fallbackQuestion = "The register springs open! A receipt inside reads: \"In computing, what number system uses only 0s and 1s?\"";
+        const payload = await SmartScapesAPI.resolveQuestion("jittery_joes", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+    }
 
     dialogue = ["You made it down to the first floor... but of course, the elevators are disabled and every exit is sealed shut.",
         "The AI's voice crackles from a speaker overhead: 'Hungry for freedom? Solve this first...'",
@@ -41,10 +50,14 @@
     ];
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         handler = dialogueHandler;
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
+        loadRoomQuestion();
         handleTextbox();
     }
 
@@ -57,9 +70,10 @@
         modal.style.visibility = "visible";
     }
 
-    function checkAnswer() {
+    async function checkAnswer() {
         const answer = document.getElementById("input").value.trim().toLowerCase();
-        if (answer === "binary" || answer === "base 2" || answer === "base-2" || answer === "base two") {
+        const correct = await SmartScapesAPI.validateAnswer("jittery_joes", answer, fallbackAnswers);
+        if (correct) {
             addCorrectDialogue();
         } else {
             alert("The AI laughs: 'Wrong! Think about how computers speak at the lowest level...'");
@@ -69,11 +83,11 @@
     function addCorrectDialogue() {
         modal.style.visibility = "hidden";
         let newDialogue = ["The receipt fades and new text burns across the register screen: 'ELEVATOR ACCESS RESTORED — FLOOR 1'",
-            "You hear a mechanical click from the far left of the hallway. The elevators!",
-            "Head to the elevators on the left side of the hall."
+            "You hear a heavy lock release near the front exits.",
+            "Head toward the first floor main exits."
         ];
         addDialogue(newDialogue);
-        elevator.href = "elevator.html";
+        elevator.href = "first_floor.html";
         elevator.onclick = "javascript:void(0)";
     }
 

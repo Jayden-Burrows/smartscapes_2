@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Studio - SmartScapes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+    body {
+      margin: 0;
+      font-family: "Pixelify Sans", sans-serif;
+      background: linear-gradient(135deg, #f0f4ff 0%, #d5e2ff 100%);
+      color: #1f2a44;
+    }
+    .wrap {
+      width: min(1100px, 94vw);
+      margin: 18px auto;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      border: 2px solid #9eb0d4;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 8px 20px rgba(22, 45, 88, 0.12);
+    }
+    h1, h2 {
+      margin: 0 0 10px;
+    }
+    textarea, input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #a7b7d8;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 16px;
+    }
+    textarea { min-height: 130px; }
+    button {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      background: #234d9f;
+      color: white;
+    }
+    .question-item {
+      border: 1px solid #cbd7ee;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #f8fbff;
+    }
+    .small {
+      font-size: 13px;
+      color: #456;
+      margin-top: 3px;
+    }
+    #status {
+      margin-top: 8px;
+      min-height: 18px;
+      color: #1c4587;
+    }
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Teacher Studio</h1>
+      <div>Generate, edit, and publish 6-7 room questions.</div>
+
+      <label>Activity Name</label>
+      <input id="activityName" placeholder="e.g., CS 1301 Midterm Review" />
+
+      <label>Syllabus / Topics</label>
+      <textarea id="syllabus" placeholder="Paste units, topics, outcomes..."></textarea>
+
+      <label>Prompt Style</label>
+      <textarea id="prompt" placeholder="Example: Create conceptual, concise questions with one clear answer."></textarea>
+
+      <button id="generateBtn">Generate Draft Questions</button>
+      <div id="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>Question Preview</h2>
+      <div id="questionsList"></div>
+      <button id="saveBtn" disabled>Save Edits</button>
+      <button id="publishBtn" disabled>Apply To Escape Room</button>
+      <div id="publishCode" class="small"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentActivityId = null;
+    let currentQuestions = [];
+
+    const statusEl = document.getElementById("status");
+    const questionsList = document.getElementById("questionsList");
+    const saveBtn = document.getElementById("saveBtn");
+    const publishBtn = document.getElementById("publishBtn");
+    const publishCode = document.getElementById("publishCode");
+
+    function renderQuestions() {
+      questionsList.innerHTML = "";
+      currentQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "question-item";
+        card.innerHTML = `
+          <div class="small">Question ${index + 1}</div>
+          <textarea data-kind="question" data-index="${index}">${q.question || ""}</textarea>
+          <div class="small">Accepted answers (comma-separated)</div>
+          <input data-kind="answers" data-index="${index}" value="${(q.answers || []).join(", ")}" />
+        `;
+        questionsList.appendChild(card);
+      });
+
+      questionsList.querySelectorAll("textarea,input").forEach((el) => {
+        el.addEventListener("input", (event) => {
+          const idx = Number(event.target.dataset.index);
+          const kind = event.target.dataset.kind;
+          if (kind === "question") {
+            currentQuestions[idx].question = event.target.value;
+          }
+          if (kind === "answers") {
+            currentQuestions[idx].answers = event.target.value
+              .split(",")
+              .map((x) => x.trim())
+              .filter(Boolean);
+          }
+        });
+      });
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", async () => {
+      statusEl.textContent = "Generating...";
+      publishCode.textContent = "";
+      const payload = {
+        activityName: document.getElementById("activityName").value,
+        syllabus: document.getElementById("syllabus").value,
+        prompt: document.getElementById("prompt").value,
+      };
+
+      const res = await fetch("/api/teacher/generate-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        statusEl.textContent = data.error || "Failed to generate.";
+        return;
+      }
+
+      currentActivityId = data.activityId;
+      currentQuestions = data.questions.slice(0, 7);
+      renderQuestions();
+      saveBtn.disabled = false;
+      publishBtn.disabled = false;
+      statusEl.textContent = "Generated drafts. Edit and publish when ready.";
+    });
+
+    saveBtn.addEventListener("click", async () => {
+      if (!currentActivityId) return;
+      const res = await fetch(`/api/teacher/activities/${currentActivityId}/questions`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questions: currentQuestions }),
+      });
+      const data = await res.json();
+      statusEl.textContent = res.ok ? "Saved." : (data.error || "Save failed.");
+    });
+
+    publishBtn.addEventListener("click", async () => {
+      if (!currentActivityId) return;
+      const res = await fetch(`/api/teacher/activities/${currentActivityId}/publish`, {
+        method: "POST"
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        statusEl.textContent = data.error || "Publish failed.";
+        return;
+      }
+      publishCode.textContent = `Activity code: ${data.activityCode}`;
+      statusEl.textContent = "Published. Share this code with students.";
+    });
+  </script>
+</body>
+</html>

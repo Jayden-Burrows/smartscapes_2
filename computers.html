@@ -178,6 +178,8 @@
 </body>
 
 <script src="imageMapResizer.min.js"></script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
@@ -198,6 +200,13 @@
     let puzzleOpened = false;
     let puzzleSolved = false;
     let attempts = 0;
+    let fallbackAnswers = ["central processing unit"];
+
+    async function loadRoomQuestion() {
+        const fallbackQuestion = "Hint: What does CPU stand for?";
+        const payload = await SmartScapesAPI.resolveQuestion("computers", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+    }
 
     dialogue = [
         "All of the third floor exits have been blocked off...",
@@ -223,6 +232,9 @@
     };
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -230,10 +242,12 @@
         // Override enableDoor so only the proxy handler controls the exit
         enableDoor = function () { };
 
+        loadRoomQuestion();
+
         handleTextbox();
     }
 
-    function checkAnswer() {
+    async function checkAnswer() {
         attempts++;
         inputStr = input.value;
         input.value = "";
@@ -243,7 +257,8 @@
             ];
             addDialogue(newSentences);
         }
-        if (inputStr.toUpperCase() === "CENTRAL PROCESSING UNIT") {
+        const correct = await SmartScapesAPI.validateAnswer("computers", inputStr, fallbackAnswers);
+        if (correct) {
             loginContent.style.display = "none";
             notepad.style.display = "block";
             return true;

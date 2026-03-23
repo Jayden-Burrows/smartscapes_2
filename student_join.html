@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join SmartScapes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #2e3f62, #111926 70%);
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      font-family: "Pixelify Sans", sans-serif;
+    }
+    .join-card {
+      width: min(540px, 92vw);
+      border: 3px solid #8ca9d6;
+      border-radius: 16px;
+      background: rgba(15, 22, 34, 0.92);
+      color: white;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+    p {
+      margin: 0 0 18px;
+      color: #d1def5;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #6c83a8;
+      background: #0f1724;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #5fa8ff;
+      color: #0f1724;
+      font-size: 1.1rem;
+      font-weight: bold;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    #message {
+      min-height: 20px;
+      margin-top: 10px;
+      color: #ffb4b4;
+    }
+  </style>
+</head>
+<body>
+  <div class="join-card">
+    <h1>Join Escape Room</h1>
+    <p>Enter your name and activity code to start playing.</p>
+    <label for="studentName">Your Name</label>
+    <input id="studentName" type="text" placeholder="e.g., Nupoor" />
+
+    <label for="activityCode">Activity Code</label>
+    <input id="activityCode" type="text" placeholder="e.g., DEMO123" value="DEMO123" />
+
+    <button id="joinBtn">Start Game</button>
+    <div id="message"></div>
+  </div>
+
+  <script src="game_api.js"></script>
+  <script>
+    const joinBtn = document.getElementById("joinBtn");
+    const studentName = document.getElementById("studentName");
+    const activityCode = document.getElementById("activityCode");
+    const message = document.getElementById("message");
+
+    joinBtn.addEventListener("click", async () => {
+      message.textContent = "";
+      try {
+        const data = await SmartScapesAPI.join(studentName.value, activityCode.value);
+        localStorage.setItem("smartscapesPlayerName", data.name);
+        window.location.href = "TVroom.html";
+      } catch (error) {
+        message.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>

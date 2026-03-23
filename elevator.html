@@ -156,6 +156,8 @@
     </div>
 </body>
 <script src="imageMapResizer.min.js"> </script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
     imageMapResize();
@@ -170,6 +172,13 @@
     let buttonValue = "";
 
     let posterTouched = false;
+    let fallbackAnswers = ["stack", "a stack", "the stack"];
+
+    async function loadRoomQuestion() {
+        const fallbackQuestion = "In programming, what data structure follows \"Last In, First Out\" (LIFO) order?";
+        const payload = await SmartScapesAPI.resolveQuestion("elevator", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+    }
 
     dialogue = ["You step out into the elevator lobby. The doors are sealed shut and the call buttons are dark. The AI has locked everything down.",
         "The AI's voice echoes from above: 'One more test, human. Solve this and maybe I'll let you go...'",
@@ -190,9 +199,13 @@
     };
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
+        loadRoomQuestion();
         handleTextbox();
     }
 
@@ -209,9 +222,10 @@
         addDialogue(newDialogue);
     }
 
-    function checkAnswer() {
+    async function checkAnswer() {
         const answer = document.getElementById("input").value.trim().toLowerCase();
-        if (answer === "stack" || answer === "a stack" || answer === "the stack") {
+        const correct = await SmartScapesAPI.validateAnswer("elevator", answer, fallbackAnswers);
+        if (correct) {
             addCorrectDialogue();
         } else {
             alert("'Wrong! Think about stacking plates — you always take from the top...'");
@@ -233,8 +247,8 @@
     function checkButtonValue() {
         if (buttonValue == "upupdowndown") {
             buttons.style.visibility = "hidden";
-            elevator1.href = "first_floor.html";
-            elevator2.href = "first_floor.html";
+            elevator1.href = "jittery_joes.html";
+            elevator2.href = "jittery_joes.html";
             elevator1.onclick = "javascript:void(0)";
             elevator2.onclick = "javascript:void(0)";
             let newDialogue = ["click the elevators"];

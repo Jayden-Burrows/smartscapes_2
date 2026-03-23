@@ -1,0 +1,62 @@
+{
+  "activities": {},
+  "published": {
+    "DEMO123": {
+      "activityName": "Demo Activity",
+      "questionsByRoom": {
+        "TVroom": {
+          "question": "Before entering deeper, what does AI stand for?",
+          "answers": [
+            "artificial intelligence"
+          ]
+        },
+        "computers": {
+          "question": "What does CPU stand for?",
+          "answers": [
+            "central processing unit"
+          ]
+        },
+        "fire_exit": {
+          "question": "What is the CSS box model order from outer to inner?",
+          "answers": [
+            "margin border padding content",
+            "margin,border,padding,content"
+          ]
+        },
+        "elevator": {
+          "question": "In programming, which data structure follows LIFO order?",
+          "answers": [
+            "stack",
+            "a stack",
+            "the stack"
+          ]
+        },
+        "jittery_joes": {
+          "question": "Which number system uses only 0 and 1?",
+          "answers": [
+            "binary",
+            "base 2",
+            "base-2",
+            "base two"
+          ]
+        },
+        "first_floor": {
+          "question": "What protocol secures most websites with encryption?",
+          "answers": [
+            "https"
+          ]
+        }
+      },
+      "createdAt": "2026-03-23T14:40:01.865435"
+    }
+  },
+  "sessions": {
+    "8f7110f2106343c49fa966bb1626d346": {
+      "name": "Nupoor",
+      "activityCode": "DEMO123",
+      "completedRooms": [],
+      "createdAt": "2026-03-23T14:40:34.500590+00:00"
+    }
+  },
+  "attempts": []
+}

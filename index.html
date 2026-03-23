@@ -118,6 +118,7 @@
     <div id="controls">
         <div class="trapezoid"></div>
         <button class="pointer" onclick="goTo1b()"> PLAY </button>
+        <button class="pointer" onclick="goToTeacherStudio()"> TEACHER STUDIO </button>
         <button class="pointer" onclick="about()"> ABOUT </button>
         <button class="pointer" onclick="showTips()"> HOW TO PLAY</button>
         <div class="trapezoid upside-down"></div>
@@ -149,7 +150,11 @@
         }
 
         function goTo1b() {
-            window.location.href = "TVroom.html";
+            window.location.href = "student_join.html";
+        }
+
+        function goToTeacherStudio() {
+            window.location.href = "teacher.html";
         }
 
         function about() {

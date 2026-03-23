@@ -21,6 +21,8 @@
 <div id="textbox"></div>
 
 <script src="imageMapResizer.min.js"></script>
+<script src="game_api.js"></script>
+<script src="room_map.js"></script>
 <script src="script.js"></script>
 <script>
         imageMapResize();
@@ -42,6 +44,9 @@
     };
 
     function setup() {
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
