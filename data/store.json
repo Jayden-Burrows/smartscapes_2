@@ -105,6 +105,15 @@
         "fire_exit"
       ],
       "createdAt": "2026-03-23T22:32:37.659283+00:00"
+    },
+    "f6ac948eac3b4d20afecc11a863808cd": {
+      "name": "Sumana",
+      "activityCode": "DEMO123",
+      "completedRooms": [
+        "computers",
+        "jittery_joes"
+      ],
+      "createdAt": "2026-03-24T00:33:07.589880+00:00"
     }
   },
   "attempts": [
@@ -296,6 +305,62 @@
       "answer": "margin,border,padding,content",
       "correct": true,
       "timestamp": "2026-03-23T22:50:20.653826+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "computers",
+      "answer": "central processing unit",
+      "correct": true,
+      "timestamp": "2026-03-24T00:34:07.456836+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "fire_exit",
+      "answer": "margin,border,padding,andcontent.",
+      "correct": false,
+      "timestamp": "2026-03-24T00:35:04.375568+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "jittery_joes",
+      "answer": "binar",
+      "correct": false,
+      "timestamp": "2026-03-24T00:35:30.891456+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "jittery_joes",
+      "answer": "binary",
+      "correct": true,
+      "timestamp": "2026-03-24T00:35:33.653413+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "computers",
+      "answer": "margin,border,padding, and content.",
+      "correct": false,
+      "timestamp": "2026-03-24T00:36:10.550673+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "computers",
+      "answer": "margin,border,padding, and content.",
+      "correct": false,
+      "timestamp": "2026-03-24T00:36:14.111707+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "computers",
+      "answer": "margin,border,padding, and content.",
+      "correct": false,
+      "timestamp": "2026-03-24T00:36:18.920245+00:00"
+    },
+    {
+      "sessionId": "f6ac948eac3b4d20afecc11a863808cd",
+      "roomId": "computers",
+      "answer": "central processing unit",
+      "correct": true,
+      "timestamp": "2026-03-24T00:36:22.088491+00:00"
     }
   ]
 }
