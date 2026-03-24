@@ -34,26 +34,24 @@ function revealText(text, proxy) {
         setTimeout(revealText, typeSpeed, text, proxy);
     } else if (proxy.textIndex == text.length) {
         enableClick();
-        textBox.style.pointerEvents = "auto";
-        textBox.style.cursor = "pointer";
     }
 }
 
 function disableClick() {
     textBox.removeEventListener("click", handleTextbox);
+    textBox.style.cursor = "wait";
 }
 
 function enableClick() {
     textBox.addEventListener("click", handleTextbox);
+    textBox.style.cursor = "url('static/images/pointerClick.png'), pointer";
 }
 
 function handleTextbox() {
     disableClick();
-    textBox.style.pointerEvents = "none";
     textBox.textContent = '';
     proxy.dialogueIndex += 1;
     proxy.textIndex = 0;
-    textBox.style.cursor = "wait";
     revealText(dialogue[proxy.dialogueIndex], proxy);
 }
 
@@ -82,6 +80,8 @@ function enableDoor() {
 }
 
 function addDialogue(arrayOfSentencesToAdd) {
+    const ogDiagLength = dialogue.length;
+
     for (let sentence of arrayOfSentencesToAdd) {
         dialogue.push(sentence);
     }
@@ -103,6 +103,8 @@ function addDialogue(arrayOfSentencesToAdd) {
         proxy.dialogueIndex++;
         proxy.textIndex = 0;
         openTextbox();
+        handleTextbox();
+    } else if (proxy.dialogueIndex == ogDiagLength - 1) {
         handleTextbox();
     }
 }
