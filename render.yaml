@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smartscapes-2
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /
+    disk:
+      name: smartscapes-data
+      mountPath: /opt/render/project-data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.7
+      - key: STORE_FILE
+        value: /opt/render/project-data/store.json
