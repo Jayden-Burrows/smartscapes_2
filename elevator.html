@@ -15,7 +15,7 @@
             background-color: black;
             border: 5px ridge slategray;
             width: 65vw;
-            height: 50vw;
+            height: 90vh;
             padding: 5px;
             visibility: hidden;
             overflow: hidden;
@@ -24,7 +24,7 @@
         .poster {
             background-color: white;
             margin: 3px;
-            height: min(calc((50vw - 10px) / 2.5));
+            height: 50%;
             width: 25%;
             float: left;
             font-size: small;
@@ -225,7 +225,7 @@
     function showPuzzle() {
         posterTouched = true;
         bulletin.style.visibility = "hidden";
-        let newDialogue = ["'Maybe this is what that AI was talking about.",
+        let newDialogue = ["Maybe this is what that AI was talking about.",
             
         ];
         addDialogue(newDialogue);
@@ -237,7 +237,9 @@
         if (correct) {
             addCorrectDialogue();
         } else {
-            alert("'Wrong! Think about stacking plates — you always take from the top...'");
+            let hint = "";
+            let newDialogue = ["Wrong! " + (hint)];
+            addDialogue(newDialogue);
         }
     }
 

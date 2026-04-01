@@ -60,23 +60,34 @@
             background-color: #2b2d46d0;
         }
 
-        #title {
-            font-family: "Pixelify Sans", sans-serif;
-            font-size: 2.5em;
-            color: white;
-            position: absolute;
-            top: calc(27%);
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #controls {
-            display: none;
+        #container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 1;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 3vh;
+            
+        }
+        
+        #title {
+            font-family: "Pixelify Sans", sans-serif;
+            font-size: 2.5em;
+            color: white;
+            display: block;
+            
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 3vh;
             width: 25vw;
+            align-items: center;
+            justify-content: center;
         }
 
         #controls > * {
@@ -113,6 +124,7 @@
         <button class="pointer accept" onclick="acceptConsent()">Accept</button>
     </div>
 
+    <div id="container">
     <h1 id="title">SMARTSCAPES</h1>
 
     <div id="controls">
@@ -123,6 +135,7 @@
         <button class="pointer" onclick="showTips()"> HOW TO PLAY</button>
         <div class="trapezoid upside-down"></div>
     </div>
+    </div>
 
     <div id="textbox"></div>
 
@@ -132,7 +145,7 @@
         imageMapResize();
 
         const consent = document.getElementById("consent");
-        const controls = document.getElementById("controls");
+        const container = document.getElementById("container");
 
         localStorage.setItem("checkedBulletin", false);
         localStorage.setItem("premiseOver", false);
@@ -143,10 +156,8 @@
         }
 
         function showControls() {
-            controls.style.display = "flex";
-            controls.style.flexDirection = "column";
-            controls.style.alignItems = "center";
-            controls.style.gap = "3vh";
+            container.style.display = "flex";
+     
         }
 
         function goTo1b() {
