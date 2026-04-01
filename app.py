@@ -13,7 +13,7 @@ from flask import Flask, jsonify, request, send_from_directory
 
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
-STORE_FILE = DATA_DIR / "store.json"
+STORE_FILE = Path(os.environ.get("STORE_FILE", str(DATA_DIR / "store.json")))
 
 ROOM_SEQUENCE = [
     "TVroom",
@@ -57,7 +57,7 @@ def utc_iso() -> str:
 
 
 def ensure_store() -> dict[str, Any]:
-    DATA_DIR.mkdir(exist_ok=True)
+    STORE_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not STORE_FILE.exists():
         initial = {
             "activities": {},
@@ -318,7 +318,10 @@ def create_app() -> Flask:
     return app
 
 
+app = create_app()
+
+
 if __name__ == "__main__":
-    app = create_app()
     port = int(os.environ.get("PORT", "8000"))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    debug = os.environ.get("FLASK_DEBUG", "").lower() in {"1", "true", "yes"}
+    app.run(host="0.0.0.0", port=port, debug=debug)
