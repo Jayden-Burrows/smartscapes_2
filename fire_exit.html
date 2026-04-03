@@ -124,11 +124,13 @@
 
     let alarmPulled = false;
     let fallbackAnswers = ["margin border padding content", "margin,border,padding,content"];
+    let roomHint = "There are four layers. The outermost creates space between elements; the innermost is the actual content.";
 
     async function loadRoomQuestion() {
         const fallbackQuestion = "What is the order of the box model outer to inner?";
         const payload = await SmartScapesAPI.resolveQuestion("fire_exit", fallbackQuestion, fallbackAnswers, "question");
         fallbackAnswers = payload.fallbackAnswers;
+        if (payload.hint) roomHint = payload.hint;
     }
 
     dialogue = [
@@ -153,6 +155,7 @@
         if (!SmartScapesAPI.requireSession()) {
             return;
         }
+        SmartScapesAPI.enterRoom("fire_exit");
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -180,12 +183,12 @@
     }
 
     async function checkAnswer() {
-        let answer = document.getElementById("input").value.trim().toLowerCase().replace(/\s/g, "");
-        const apiCorrect = await SmartScapesAPI.validateAnswer("fire_exit", answer, fallbackAnswers);
-        const localCorrect = answer.includes("margin") && answer.includes("border") && answer.includes("padding") && answer.includes("content");
-        if (apiCorrect || localCorrect) {
+        let answer = document.getElementById("input").value.trim().toLowerCase();
+        const result = await SmartScapesAPI.validateAnswer("fire_exit", answer, fallbackAnswers);
+        if (result.correct) {
             modal.style.visibility = "hidden";
             let newDialogue = [
+                "Correct!",
                 "The fire exit door clicks open!",
                 "You can now leave through the exit."
             ];
@@ -193,11 +196,9 @@
             exitDoor.href = "jittery_joes.html";
             exitDoor.onclick = null;
         } else {
-            let newDialogue = [
-                "That's not right. Think about how the box model works..."
-            ];
             modal.style.visibility = "hidden";
-            addDialogue(newDialogue);
+            let hintMsg = result.attemptCount >= 3 ? "Hint: " + roomHint : "That's not right. Check your notes and try again!";
+            addDialogue([hintMsg]);
         }
     }
 

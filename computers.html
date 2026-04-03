@@ -209,11 +209,13 @@
     let puzzleSolved = false;
     let attempts = 0;
     let fallbackAnswers = ["central processing unit"];
+    let roomHint = "Think about the main processing chip inside every computer.";
 
     async function loadRoomQuestion() {
         const fallbackQuestion = "Hint: What does CPU stand for?";
         const payload = await SmartScapesAPI.resolveQuestion("computers", fallbackQuestion, fallbackAnswers, "question");
         fallbackAnswers = payload.fallbackAnswers;
+        if (payload.hint) roomHint = payload.hint;
     }
 
     dialogue = [
@@ -243,6 +245,7 @@
         if (!SmartScapesAPI.requireSession()) {
             return;
         }
+        SmartScapesAPI.enterRoom("computers");
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -259,14 +262,8 @@
         attempts++;
         inputStr = input.value;
         input.value = "";
-        if (attempts == 2) {
-            let newSentences = [
-                "Maybe if I keep trying, a hint will appear."
-            ];
-            addDialogue(newSentences);
-        }
-        const correct = await SmartScapesAPI.validateAnswer("computers", inputStr, fallbackAnswers);
-        if (correct) {
+        const result = await SmartScapesAPI.validateAnswer("computers", inputStr, fallbackAnswers);
+        if (result.correct) {
             loginContent.style.display = "none";
             notepad.style.display = "block";
             return true;
@@ -274,10 +271,12 @@
             incorrectPasswordMessage.style.display = "flex";
             loginInput.style.display = "none";
             hint.style.display = "none";
+            if (result.attemptCount >= 3) {
+                hint.textContent = "Hint: " + roomHint;
+            }
             inputString = "";
             return false;
         }
-        return inputStr === "CENTRAL PROCESSING UNIT";
     }
 
     function pressOk() {

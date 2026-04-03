@@ -49,6 +49,7 @@
             if (!SmartScapesAPI.requireSession()) {
                 return;
             }
+            SmartScapesAPI.enterRoom("TVroom");
             proxy = new Proxy(textProps, handler);
             proxy.dialogueIndex = -1;
             proxy.textIndex = 0;
@@ -104,6 +105,7 @@
                 let newDialogue = ["The door is locked. Maybe there's a clue somewhere in this room."];
                 addDialogue(newDialogue);
             } else {
+                SmartScapesAPI.markVisited("TVroom");
                 exitDoor.onclick = null;
                 exitDoor.classList.add("pointer");
             }

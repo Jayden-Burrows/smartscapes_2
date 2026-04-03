@@ -176,6 +176,7 @@
     const input = document.getElementById("input");
 
     let fallbackAnswers = ["binary", "base 2", "base-2", "base two"];
+    let roomHint = "Computers only understand two states — on and off.";
 
     let tv1Watched = false;
     let tv2Watched = false;
@@ -192,15 +193,10 @@
     });
 
     async function loadRoomQuestion() {
-      const fallbackQuestion =
-        'The register springs open! A receipt inside reads: "In computing, what number system uses only 0s and 1s?"';
-      const payload = await SmartScapesAPI.resolveQuestion(
-        "jittery_joes",
-        fallbackQuestion,
-        fallbackAnswers,
-        "question",
-      );
-      fallbackAnswers = payload.fallbackAnswers;
+        const fallbackQuestion = "The register springs open! A receipt inside reads: \"In computing, what number system uses only 0s and 1s?\"";
+        const payload = await SmartScapesAPI.resolveQuestion("jittery_joes", fallbackQuestion, fallbackAnswers, "question");
+        fallbackAnswers = payload.fallbackAnswers;
+        if (payload.hint) roomHint = payload.hint;
     }
 
     dialogue = [
@@ -225,14 +221,15 @@
     };
 
     function setup() {
-      if (!SmartScapesAPI.requireSession()) {
-        return;
-      }
-      proxy = new Proxy(textProps, handler);
-      proxy.dialogueIndex = -1;
-      proxy.textIndex = 0;
-      loadRoomQuestion();
-      handleTextbox();
+        if (!SmartScapesAPI.requireSession()) {
+            return;
+        }
+        SmartScapesAPI.enterRoom("jittery_joes");
+        proxy = new Proxy(textProps, handler);
+        proxy.dialogueIndex = -1;
+        proxy.textIndex = 0;
+        loadRoomQuestion();
+        handleTextbox();
     }
 
     function addTv1Dialogue() {
@@ -281,19 +278,16 @@
     }
 
     async function checkAnswer() {
-      const answer = input.value.trim().toLowerCase();
-      const correct = await SmartScapesAPI.validateAnswer(
-        "jittery_joes",
-        answer,
-        fallbackAnswers,
-      );
-      if (correct) {
-        addCorrectDialogue();
-      } else {
-        alert(
-          "The AI laughs: 'Wrong! Think about how computers speak at the lowest level...'",
-        );
-      }
+        const answer = input.value.trim().toLowerCase();
+        const result = await SmartScapesAPI.validateAnswer("jittery_joes", answer, fallbackAnswers);
+        if (result.correct) {
+            addCorrectDialogue();
+        } else {
+            const msg = result.attemptCount >= 3
+                ? "The AI laughs: 'Wrong! Hint: " + roomHint + "'"
+                : "The AI laughs: 'Wrong! Think it over and try again...'";
+            alert(msg);
+        }
     }
 
     function addCorrectDialogue() {

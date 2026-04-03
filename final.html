@@ -1,14 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartScapes</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartScapes — You Escaped!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { overflow: auto; }
+    img.bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; }
+    #overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55); z-index: 1;
+    }
+    #results {
+      position: relative; z-index: 2;
+      max-width: 680px; margin: 40px auto 60px;
+      padding: 0 16px;
+      opacity: 0;
+      transition: opacity 1.2s ease 0.5s;
+    }
+    #results.show { opacity: 1; }
+    .res-header {
+      background: linear-gradient(135deg, #0d1b2e, #1a3354);
+      border: 2px solid #00ff88;
+      border-radius: 16px 16px 0 0;
+      padding: 28px 28px 20px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
+    }
+    .res-header h1 {
+      font-family: "Pixelify Sans", sans-serif;
+      color: #00ff88;
+      font-size: 2.4rem;
+      text-shadow: 0 0 20px rgba(0,255,136,0.6);
+      margin-bottom: 6px;
+    }
+    .res-header p { color: #a0c8a0; font-size: 0.95rem; }
+    .res-body {
+      background: rgba(10, 18, 28, 0.96);
+      border: 2px solid #00ff88;
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      padding: 24px 28px 28px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      flex: 1; min-width: 120px;
+      background: rgba(0,255,136,0.06);
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .stat-box .stat-val { font-size: 1.8rem; font-weight: bold; color: #00ff88; font-family: "Pixelify Sans", sans-serif; }
+    .stat-box .stat-label { font-size: 0.78rem; color: #7aaa8a; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .rooms-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .rooms-table th {
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #7aaa8a; border-bottom: 1px solid rgba(0,255,136,0.2);
+      padding: 6px 10px; text-align: left;
+    }
+    .rooms-table td {
+      font-size: 0.9rem; color: #cde8d8; padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .rooms-table tr:last-child td { border-bottom: none; }
+    .badge-done { color: #00ff88; }
+    .badge-skip { color: #f59e0b; font-size: 0.8rem; }
+    .actions { display: flex; flex-direction: column; gap: 10px; }
+    .btn-play {
+      background: linear-gradient(135deg, #006688, #003344);
+      border: 2px solid #00ddff;
+      color: #00ddff;
+      padding: 14px;
+      border-radius: 10px;
+      font-family: "Pixelify Sans", sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-play:hover { background: linear-gradient(135deg, #0088aa, #004455); }
+    .btn-download {
+      background: transparent;
+      border: 1px solid rgba(0,255,136,0.35);
+      color: #7aaa8a;
+      padding: 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .btn-download:hover { background: rgba(0,255,136,0.07); color: #00ff88; }
+    #textbox { z-index: 3; }
+  </style>
+</head>
+<body>
+  <img class="bg" src="static/images/final.JPG" alt="Final room">
+  <div id="overlay"></div>
+  <div id="textbox"></div>
+  <div id="results">
+    <div class="res-header">
+      <h1>🎉 YOU ESCAPED!</h1>
+      <p id="escapeName">Loading your results…</p>
+    </div>
+    <div class="res-body">
+      <div class="stat-row" id="statRow"></div>
+      <table class="rooms-table" id="roomsTable">
+        <thead>
+          <tr>
+            <th>Room</th>
+            <th>Time</th>
+            <th>Attempts</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="roomsTbody"></tbody>
+      </table>
+      <div class="actions">
+        <button class="btn-play" onclick="window.location.href='/'">🔄 Play Again</button>
+        <a class="btn-download" href="/api/teacher/export-csv" download>⬇ Download Full Data (CSV)</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="imageMapResizer.min.js"></script>
+  <script src="game_api.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const ROOM_LABELS = {
+      TVroom: "📺 Study Room",
+      computers: "💻 Computer Lab",
+      fire_exit: "🚨 Fire Exit",
+      elevator: "🛗 Elevators",
+      jittery_joes: "☕ Jittery Joe's",
+      first_floor: "🚪 First Floor",
+    };
+
+    function fmtTime(secs) {
+      if (secs == null) return "—";
+      const m = Math.floor(secs / 60), s = secs % 60;
+      return m > 0 ? `${m}m ${s}s` : `${s}s`;
+    }
+
+    dialogue = [
+      "You finally succeeded in escaping the MLC in order to make it to your final exam.",
+      "You sigh in relief.",
+      "After completing the security system's challenges, you feel ready to take on your final exam.",
+      "However, unfortunately for you, you realize that your midterm was on the third floor of MLC anyways, so you make the walk of shame back into the building."
+    ];
+
+    let handler = {
+      set(target, property, value, receiver) {
+        target[property] = value;
+        if (property === "dialogueIndex" && value === dialogue.length) {
+          showResults();
+        }
+        return true;
+      }
+    };
+
+    async function showResults() {
+      const stats = await SmartScapesAPI.getStats();
+      if (!stats) {
+        document.getElementById("escapeName").textContent = "Good job escaping!";
+        document.getElementById("results").classList.add("show");
+        return;
+      }
+
+      document.getElementById("escapeName").textContent =
+        `${stats.name} — ${stats.activityName || "SmartScapes"}`;
+
+      const accuracy = stats.totalAttempts > 0
+        ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100) : 100;
+
+      document.getElementById("statRow").innerHTML = `
+        <div class="stat-box"><div class="stat-val">${fmtTime(stats.totalTimeSeconds)}</div><div class="stat-label">Total Time</div></div>
+        <div class="stat-box"><div class="stat-val">${stats.totalAttempts}</div><div class="stat-label">Total Attempts</div></div>
+        <div class="stat-box"><div class="stat-val">${accuracy}%</div><div class="stat-label">Accuracy</div></div>
+      `;
+
+      const tbody = document.getElementById("roomsTbody");
+      (stats.perRoom || []).forEach(r => {
+        const label = ROOM_LABELS[r.roomId] || r.roomId;
+        const statusHtml = r.correctAttempts > 0
+          ? `<span class="badge-done">✅ Solved</span>`
+          : (r.totalAttempts > 0 ? `<span class="badge-skip">Visited</span>` : `<span style="color:#555">—</span>`);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${label}</td>
+          <td>${fmtTime(r.timeSeconds)}</td>
+          <td>${r.totalAttempts || "—"}</td>
+          <td>${statusHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("results").classList.add("show");
+    }
+
+    function setup() {
+      localStorage.removeItem("checkedBulletin");
+      localStorage.removeItem("premiseOver");
+      proxy = new Proxy(textProps, handler);
+      proxy.dialogueIndex = -1;
+      proxy.textIndex = 0;
+      handleTextbox();
+    }
+
+    window.onload = setup;
+  </script>
+</body>
+</html>
     <style>
         body {
             margin: 0;

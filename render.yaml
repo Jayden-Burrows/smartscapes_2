@@ -14,3 +14,5 @@ services:
         value: 3.13.7
       - key: STORE_FILE
         value: /opt/render/project-data/store.json
+      - key: GEMINI_API_KEY
+        sync: false

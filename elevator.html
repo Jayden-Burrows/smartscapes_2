@@ -182,11 +182,13 @@
 
     let posterTouched = false;
     let fallbackAnswers = ["stack", "a stack", "the stack"];
+    let roomHint = "Think of a stack of plates — you always take from the top.";
 
     async function loadRoomQuestion() {
         const fallbackQuestion = "In programming, what data structure follows \"Last In, First Out\" (LIFO) order?";
         const payload = await SmartScapesAPI.resolveQuestion("elevator", fallbackQuestion, fallbackAnswers, "question");
         fallbackAnswers = payload.fallbackAnswers;
+        if (payload.hint) roomHint = payload.hint;
     }
 
     dialogue = ["You step out into the elevator lobby. The doors are sealed shut and the call buttons are dark. The AI has locked everything down.",
@@ -211,6 +213,7 @@
         if (!SmartScapesAPI.requireSession()) {
             return;
         }
+        SmartScapesAPI.enterRoom("elevator");
         proxy = new Proxy(textProps, handler);
         proxy.dialogueIndex = -1;
         proxy.textIndex = 0;
@@ -233,13 +236,12 @@
 
     async function checkAnswer() {
         const answer = document.getElementById("input").value.trim().toLowerCase();
-        const correct = await SmartScapesAPI.validateAnswer("elevator", answer, fallbackAnswers);
-        if (correct) {
+        const result = await SmartScapesAPI.validateAnswer("elevator", answer, fallbackAnswers);
+        if (result.correct) {
             addCorrectDialogue();
         } else {
-            let hint = "";
-            let newDialogue = ["Wrong! " + (hint)];
-            addDialogue(newDialogue);
+            const msg = result.attemptCount >= 3 ? "Hint: " + roomHint : "Wrong! Think it over and try again...";
+            alert(msg);
         }
     }
 

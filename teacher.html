@@ -3,7 +3,409 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Studio - SmartScapes</title>
+  <title>Teacher Studio — SmartScapes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f4f8;
+      color: #1a2535;
+      min-height: 100vh;
+    }
+    header {
+      background: #1e3a5f;
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 0.5px; }
+    header span { font-size: 0.85rem; opacity: 0.7; }
+    .page { max-width: 960px; margin: 28px auto; padding: 0 20px 60px; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #dde4ed;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .card h2 { font-size: 1rem; font-weight: 600; color: #1e3a5f; margin-bottom: 14px; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; color: #4a5568; margin-bottom: 6px; margin-top: 14px; }
+    label:first-child { margin-top: 0; }
+    input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #1a2535;
+      background: #fafbfc;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: white;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .upload-zone {
+      border: 2px dashed #cbd5e0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      color: #718096;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      margin-top: 6px;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: #3b82f6;
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .upload-zone input { display: none; }
+    .upload-hint { font-size: 0.78rem; color: #a0aec0; margin-top: 4px; }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary { background: #1e3a5f; color: white; margin-top: 16px; width: 100%; }
+    .btn-primary:hover { background: #2d5282; }
+    .btn-primary:disabled { background: #a0aec0; cursor: not-allowed; }
+    .btn-success { background: #16a34a; color: white; margin-top: 12px; width: 100%; }
+    .btn-success:hover { background: #15803d; }
+    .btn-success:disabled { background: #a0aec0; cursor: not-allowed; }
+    .btn-outline {
+      background: white;
+      border: 1px solid #cbd5e0;
+      color: #4a5568;
+      padding: 7px 14px;
+      font-size: 0.85rem;
+      margin-top: 0;
+      width: auto;
+    }
+    .btn-outline:hover { background: #f7fafc; }
+    #status {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      min-height: 18px;
+      color: #2563eb;
+    }
+    #status.error { color: #dc2626; }
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 4px;
+    }
+    @media (max-width: 640px) { .rooms-grid { grid-template-columns: 1fr; } }
+    .room-card {
+      border: 1px solid #dde4ed;
+      border-radius: 10px;
+      padding: 14px;
+      background: #fafbfc;
+    }
+    .room-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .room-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #e2e8f0;
+      color: #4a5568;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .room-icon { font-size: 18px; }
+    .diff-badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .diff-easy { background: #dcfce7; color: #166534; }
+    .diff-medium { background: #fef9c3; color: #854d0e; }
+    .diff-hard { background: #fee2e2; color: #991b1b; }
+    .room-card label { margin-top: 8px; font-size: 0.78rem; }
+    .room-card textarea, .room-card input[type="text"] {
+      font-size: 0.88rem;
+      min-height: auto;
+      padding: 8px 10px;
+    }
+    .room-card textarea { min-height: 60px; }
+    .activity-code-box {
+      background: #f0fdf4;
+      border: 2px solid #16a34a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      margin-top: 14px;
+    }
+    .activity-code-box .code-label { font-size: 0.85rem; color: #4a5568; margin-bottom: 6px; }
+    .activity-code-box .code-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #15803d;
+      letter-spacing: 4px;
+    }
+    .activity-code-box .code-hint { font-size: 0.8rem; color: #6b7280; margin-top: 6px; }
+    .download-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: #2563eb;
+      text-decoration: none;
+      border: 1px solid #93c5fd;
+      border-radius: 7px;
+      padding: 7px 14px;
+    }
+    .download-link:hover { background: #eff6ff; }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SmartScapes — Teacher Studio</h1>
+    <span>Generate &amp; publish escape room questions</span>
+  </header>
+
+  <div class="page">
+
+    <!-- Step 1: Generate -->
+    <div class="card">
+      <h2>1 — Activity Setup</h2>
+
+      <label for="activityName">Activity Name</label>
+      <input id="activityName" type="text" placeholder="e.g., CS 1301 Midterm Review" />
+
+      <label for="prompt">Describe the topics and question style you want</label>
+      <textarea id="prompt" placeholder="e.g., Java basics — variables, loops, if/else, arrays. Create short-answer questions that are conceptual and suitable for intro CS students. Vary difficulty from easy to hard."></textarea>
+
+      <label>Upload a file to add its content to your prompt (optional)</label>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".txt,.csv,.pdf" />
+        <div>📎 Drag &amp; drop a file here, or <strong>click to browse</strong></div>
+        <div class="upload-hint">Supports .txt, .csv, .pdf — content is appended to your prompt</div>
+      </div>
+      <div id="fileStatus" style="font-size:0.82rem;color:#6b7280;margin-top:6px;"></div>
+
+      <button class="btn btn-primary" id="generateBtn">Generate Questions</button>
+      <div id="status"></div>
+    </div>
+
+    <!-- Step 2: Edit room questions -->
+    <div class="card" id="previewCard" style="display:none;">
+      <h2>2 — Review &amp; Edit Room Questions</h2>
+      <p style="font-size:0.88rem;color:#718096;margin-bottom:16px;">Each question is assigned to a specific room. Edit anything before publishing.</p>
+      <div class="rooms-grid" id="roomsGrid"></div>
+
+      <button class="btn btn-success" id="publishBtn">Apply to Escape Room</button>
+    </div>
+
+    <!-- Published code -->
+    <div class="card" id="publishedCard" style="display:none;">
+      <h2>3 — Share with Students</h2>
+      <div class="activity-code-box">
+        <div class="code-label">Activity Code</div>
+        <div class="code-value" id="publishedCode">—</div>
+        <div class="code-hint">Students enter this code on the join screen to play with your questions.</div>
+      </div>
+      <br>
+      <a class="download-link" href="/api/teacher/export-csv" download>⬇ Download Student Data (CSV)</a>
+    </div>
+
+  </div>
+
+  <script>
+    const ROOM_META = {
+      computers:    { label: "Computer Lab",      icon: "💻" },
+      fire_exit:    { label: "Fire Exit",          icon: "🚨" },
+      elevator:     { label: "Elevator Lobby",     icon: "🛗" },
+      jittery_joes: { label: "Jittery Joe's Café", icon: "☕" },
+    };
+
+    let currentActivityId = null;
+    let currentQuestions = [];
+
+    const statusEl   = document.getElementById("status");
+    const genBtn     = document.getElementById("generateBtn");
+    const publishBtn = document.getElementById("publishBtn");
+    const previewCard   = document.getElementById("previewCard");
+    const publishedCard = document.getElementById("publishedCard");
+    const roomsGrid  = document.getElementById("roomsGrid");
+    const fileInput  = document.getElementById("fileInput");
+    const uploadZone = document.getElementById("uploadZone");
+    const fileStatus = document.getElementById("fileStatus");
+
+    // ── File upload ──────────────────────────────────────────────
+    uploadZone.addEventListener("click", () => fileInput.click());
+    uploadZone.addEventListener("dragover", (e) => { e.preventDefault(); uploadZone.classList.add("drag-over"); });
+    uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+    uploadZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove("drag-over");
+      const file = e.dataTransfer.files[0];
+      if (file) handleFileUpload(file);
+    });
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files[0]) handleFileUpload(fileInput.files[0]);
+    });
+
+    async function handleFileUpload(file) {
+      fileStatus.textContent = `Uploading ${file.name}…`;
+      const form = new FormData();
+      form.append("file", file);
+      try {
+        const res = await fetch("/api/teacher/upload-text", { method: "POST", body: form });
+        const data = await res.json();
+        if (!res.ok) { fileStatus.textContent = data.error || "Upload failed."; return; }
+        const promptEl = document.getElementById("prompt");
+        promptEl.value = (promptEl.value ? promptEl.value + "\n\n" : "") + data.text.trim();
+        fileStatus.textContent = `✓ Content from "${file.name}" added to prompt.`;
+      } catch {
+        fileStatus.textContent = "Upload failed — check your connection.";
+      }
+    }
+
+    // ── Render room preview cards ─────────────────────────────────
+    function renderRooms() {
+      roomsGrid.innerHTML = "";
+      currentQuestions.forEach((q, idx) => {
+        const meta = ROOM_META[q.roomId] || { label: q.roomId, icon: "❓" };
+        const diffClass = "diff-" + (q.difficulty || "medium");
+        const card = document.createElement("div");
+        card.className = "room-card";
+        card.innerHTML = `
+          <div class="room-card-header">
+            <span class="room-icon">${meta.icon}</span>
+            <span class="room-badge">${meta.label}</span>
+            <span class="diff-badge ${diffClass}">${q.difficulty || "medium"}</span>
+          </div>
+          <label>Question</label>
+          <textarea data-field="question" data-idx="${idx}">${q.question || ""}</textarea>
+          <label>In-world context (shown in the room)</label>
+          <textarea data-field="roomContext" data-idx="${idx}" style="font-size:0.8rem;color:#555;">${q.roomContext || ""}</textarea>
+          <label>Accepted answers (comma-separated)</label>
+          <input type="text" data-field="answers" data-idx="${idx}" value="${(q.answers || []).join(", ")}" />
+          <label>Hint (shown after 3 wrong attempts)</label>
+          <input type="text" data-field="hint" data-idx="${idx}" value="${q.hint || ""}" />
+        `;
+        roomsGrid.appendChild(card);
+      });
+
+      roomsGrid.querySelectorAll("[data-field]").forEach((el) => {
+        el.addEventListener("input", () => {
+          const idx = Number(el.dataset.idx);
+          const field = el.dataset.field;
+          if (field === "answers") {
+            currentQuestions[idx].answers = el.value.split(",").map(s => s.trim()).filter(Boolean);
+          } else {
+            currentQuestions[idx][field] = el.value;
+          }
+        });
+      });
+    }
+
+    // ── Generate ─────────────────────────────────────────────────
+    genBtn.addEventListener("click", async () => {
+      const prompt = document.getElementById("prompt").value.trim();
+      if (!prompt) { setStatus("Please enter a topic prompt first.", true); return; }
+
+      genBtn.disabled = true;
+      genBtn.innerHTML = '<span class="spinner"></span>Generating…';
+      setStatus("");
+
+      try {
+        const res = await fetch("/api/teacher/generate-questions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            activityName: document.getElementById("activityName").value || "Untitled Activity",
+            prompt,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setStatus(data.error || "Generation failed.", true); return; }
+
+        currentActivityId = data.activityId;
+        currentQuestions = data.questions;
+        renderRooms();
+        previewCard.style.display = "block";
+        previewCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        setStatus("Questions generated. Review and edit before publishing.");
+      } catch {
+        setStatus("Request failed — check your connection.", true);
+      } finally {
+        genBtn.disabled = false;
+        genBtn.textContent = "Generate Questions";
+      }
+    });
+
+    // ── Publish ───────────────────────────────────────────────────
+    publishBtn.addEventListener("click", async () => {
+      if (!currentActivityId) return;
+
+      // Save edits first
+      await fetch(`/api/teacher/activities/${currentActivityId}/questions`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questions: currentQuestions }),
+      });
+
+      publishBtn.disabled = true;
+      publishBtn.innerHTML = '<span class="spinner"></span>Publishing…';
+
+      try {
+        const res = await fetch(`/api/teacher/activities/${currentActivityId}/publish`, { method: "POST" });
+        const data = await res.json();
+        if (!res.ok) { setStatus(data.error || "Publish failed.", true); return; }
+
+        document.getElementById("publishedCode").textContent = data.activityCode;
+        publishedCard.style.display = "block";
+        publishedCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        setStatus("Published! Share the activity code with your students.");
+      } catch {
+        setStatus("Publish failed — check your connection.", true);
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.textContent = "Apply to Escape Room";
+      }
+    });
+
+    function setStatus(msg, isError = false) {
+      statusEl.textContent = msg;
+      statusEl.className = isError ? "error" : "";
+    }
+  </script>
+</body>
+</html>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
     body {
