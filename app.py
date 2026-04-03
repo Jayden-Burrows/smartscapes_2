@@ -118,12 +118,9 @@ def generate_draft_questions(prompt: str) -> list[dict[str, Any]]:
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if api_key:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel(
-                "gemini-1.5-flash",
-                generation_config={"response_mime_type": "application/json"},
-            )
+            from google import genai
+            from google.genai import types
+            client = genai.Client(api_key=api_key)
             room_descriptions = "\n".join(
                 f"- roomId \"{rid}\": {desc}" for rid, desc in ROOM_DESCRIPTIONS.items()
             )
@@ -149,7 +146,13 @@ def generate_draft_questions(prompt: str) -> list[dict[str, Any]]:
                 "{\"roomId\": \"jittery_joes\", ...}"
                 "]}"
             )
-            response = model.generate_content(gemini_prompt)
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=gemini_prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                ),
+            )
             parsed = json.loads(response.text)
             raw_list = parsed.get("questions") or []
             if not isinstance(raw_list, list):
